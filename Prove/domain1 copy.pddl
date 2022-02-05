@@ -4,7 +4,7 @@
 ;CRATES in depot are supposed to contain either food or meds; can be picked
 ;up and delivered by the ROBOT.
 
-(define (domain basicDelivery)
+(define (domain basicDelivery_copy)
 
 ;remove requirements that are not needed
 (:requirements :typing)

@@ -7,7 +7,7 @@
 (define (domain basicDelivery_copy)
 
 ;remove requirements that are not needed
-(:requirements :typing)
+(:requirements :typing :fluents)
 
 (:types 
     robot crate person location carrier content
@@ -34,6 +34,7 @@
     (is_at_loc ?carrier - carrier ?l - location)    ;carrier ?r is at location ?l
     (is_empty ?carrier - carrier)                   ;carrier ?r is empty
     (is_loaded ?carrier - carrier ?c - crate)       ;carrier ?r is loaded with crate ?c
+
     
     ;people
     (is_at ?p - person ?l - location)       ;person ?p is at location ?l
@@ -49,7 +50,10 @@
     )
 
 
-(:functions ;todo: define numeric functions here
+(:functions 
+    (total_cost)
+    (carrier_capacity)
+    (amount_loaded ?carrier - carrier)      ;number of crates currently loaded
 )
 
 ;;move carrier from location ?l1 to location ?l2
@@ -57,7 +61,10 @@
 (:action move
     :parameters (?carrier - carrier ?r - robot ?from ?to - location)
     :precondition (and (is_at_loc ?carrier ?from))
-    :effect (and (is_at_loc ?carrier ?to)(not (is_at_loc ?carrier ?from)))
+    :effect (and 
+        (is_at_loc ?carrier ?to)(not (is_at_loc ?carrier ?from))
+        (increase (total_cost) 100000000)
+        )
 )
 
 ;;send robot back to base (depot)
@@ -71,10 +78,13 @@
 (:action load_crate
     :parameters (?depot - location ?c - crate ?r - robot ?carrier - carrier ?content - content)
     :precondition (and 
-        (is_at_loc ?carrier ?depot)(is_empty ?carrier)(lays ?c ?depot)
-        (is_available ?c)(contains ?c ?content))
+        (is_at_loc ?carrier ?depot)(lays ?c ?depot)
+        (is_available ?c)(contains ?c ?content)
+        ;(> (-(carrier_capacity)(amount_loaded ?carrier)) 0)
+        )
     :effect (and (is_loaded ?carrier ?c)(not (is_empty ?carrier))
         (not (lays ?c ?depot))
+        (increase (amount_loaded ?carrier) 1)
     )
 )
 
@@ -82,11 +92,13 @@
 (:action deliver_crate
     :parameters (?r - robot ?c - crate ?l - location ?p - person ?carrier - carrier ?content - content)
     :precondition (and 
-        (is_at_loc ?carrier ?l)(is_at ?p ?l)(is_loaded ?carrier ?c)(needs ?p ?content)
+        (is_at_loc ?carrier ?l)(is_at ?p ?l)(is_loaded ?carrier ?c)(is_available ?c)
+        (needs ?p ?content)(contains ?c ?content)(= (amount_loaded ?carrier) 2)
         )
     :effect (and 
-        (is_empty ?carrier)(served ?p ?content)(lays ?c ?l)
+        (served ?p ?content)(lays ?c ?l)
         (not (is_loaded ?carrier ?c))(not (needs ?p ?content))(not (is_available ?c))
+        (decrease (amount_loaded ?carrier) 1)
     )
 )
 

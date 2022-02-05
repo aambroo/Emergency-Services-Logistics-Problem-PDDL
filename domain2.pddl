@@ -3,14 +3,15 @@
 ;can load crates
 ;CRATES in depot are supposed to contain either food or meds; can be picked
 ;up and delivered by the ROBOT.
+;In this example crates are moved in a different way wrt domain1
 
-(define (domain basicDelivery)
+(define (domain normalDelivery)
 
 ;remove requirements that are not needed
 (:requirements :typing)
 
 (:types 
-    robot crate person location
+    robot crate person location count
     ;todo: enumerate types and their hierarchy here, e.g. car truck bus - vehicle
 )
 
@@ -28,7 +29,8 @@
     ;robot
     (is_at_loc ?r - robot ?l - location)    ;robot ?r is at location ?l
     (is_empty ?r - robot)                   ;robot ?r is empty
-    (is_loaded ?r - robot ?c - crate)       ;robot ?r is loaded with crate ?c
+    (crate_count)                           ;counts number of crates loaded in robot
+    ;(is_loaded ?r - robot ?c - crate)       ;robot ?r is loaded with crate ?c
     ;people
     (is_at ?p - person ?l - location)       ;person ?p is at location ?l
     ;needs

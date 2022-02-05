@@ -1,5 +1,5 @@
-(define (problem problem1) (:domain crateDHL)
-(:objects 
+(define (problem problem1) (:domain basicDelivery)
+(:objects
     l1 l2 l3 - location
     john alice marco - person
     c1 c2 c3 c4 c5 - crate

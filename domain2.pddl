@@ -11,7 +11,13 @@
 (:requirements :typing)
 
 (:types 
-    robot crate person location count
+    robot       ;fixed at depot. Loads the carrier.
+    carrier     ;is loaded by the robot. Delivers crates to people in need.
+    crate       ;a crate can contain food or meds. Can be loaded from a robot onto
+                ;a carrier.
+    person      ;a person
+    location    ;place where to deliver crates. People can be at locations.
+    count       ;number of crates per carrier
     ;todo: enumerate types and their hierarchy here, e.g. car truck bus - vehicle
 )
 
@@ -27,13 +33,14 @@
     (lays ?c - crate ?l - location)         ;crate ?c lays at location ?l
     (is_available ?c - crate)                   ;crate can be loaded
     ;robot
-    (is_at_loc ?r - robot ?l - location)    ;robot ?r is at location ?l
     (is_empty ?r - robot)                   ;robot ?r is empty
+    (is_holding ?r - robot ?c - crate)
+    ;carrier
+    (is_at_loc ?carrier - carrier ?l - location)    ;robot ?r is at location ?l
     (crate_count)                           ;counts number of crates loaded in robot
-    ;(is_loaded ?r - robot ?c - crate)       ;robot ?r is loaded with crate ?c
+    (is_carrying ?carrier - carrier ?c - crate)       ;robot ?r is loaded with crate ?c
     ;people
     (is_at ?p - person ?l - location)       ;person ?p is at location ?l
-    ;needs
     (needs_food ?p - person)                ;person ?p needs food
     (needs_meds ?p - person)                ;person ?p needs meds
     ;satisfaction
@@ -43,7 +50,8 @@
     )
 
 
-(:functions ;todo: define numeric functions here
+(:functions
+    ;total_cost function
 )
 
 ;;move robot from location ?l1 to location ?l2
@@ -61,14 +69,30 @@
 ;    :effect (and (is_at_loc ?r ?depot)(not (is_at_loc ?r ?l)))
 ;)
 
-;;loads meds crate
+;;robot loads meds crate onto carrier
 (:action load_meds_crate
-    :parameters (?l - location ?c - crate ?r - robot)
-    :precondition (and (is_at_loc ?r ?l)(is_empty ?r)(lays ?c ?l)(is_available ?c))
+    :parameters (?l - location ?c - crate ?r - robot ?carrier - carrier ?crate_count - count)
+    :precondition (and 
+        (is_empty ?r)
+        (lays ?c ?l)(is_available ?c)
+        (is_at_loc ?carrier ?l)
+        )
     :effect (and (is_loaded ?r ?c)(not (is_empty ?r))
         (not (lays ?c ?l))
     )
 )
+
+;;robot loads meds crate onto carrier
+(:action load_meds_crate
+    :parameters ()
+    :precondition (and 
+        (lays ?c ?depot)
+        (is_at_loc ?carrier ?depot)
+        (is_empty ?r)
+    )
+    :effect (and )
+)
+
 
 ;;loads food crate
 (:action load_food_crate

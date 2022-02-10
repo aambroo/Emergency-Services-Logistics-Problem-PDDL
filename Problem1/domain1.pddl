@@ -19,7 +19,7 @@
 
 ; un-comment following line if constants are needed
 (:constants
-    agent - robot
+    operator - robot
 )
 
 (:predicates 
@@ -34,7 +34,7 @@
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
-    
+    (served ?p - person ?c - crate)              ;person ?p has been served with crate ?c
     )
 
 ;moves robot between two locations: ?from and ?to
@@ -64,30 +64,17 @@
 )
 
 
-;;deliver crate ?c to location ?l to person ?p
-(:action deliver_food_crate
-    :parameters (?r - robot ?c - crate ?l - location ?p - person ?f - need)
+;;deliver (generic) crate ?c to location ?l to person ?p
+(:action deliver_crate
+    :parameters (?r - robot ?c - crate ?l - location ?p - person)
     :precondition (and 
         (robot_at ?r ?l)(person_at ?p ?l)
         (bearing ?r ?c)
         )
     :effect (and 
-        (is_empty ?r)(food_served ?p)(crate_at ?c ?l)
+        (is_empty ?r)(served ?p ?c)(crate_at ?c ?l)
         (not (bearing ?r ?c))(not (is_available ?c))
     )
 )
-
-;;deliver meds crate
-(:action deliver_meds_crate
-    :parameters (?r - robot ?c - crate ?l - location ?p - person)
-    :precondition (and 
-        (robot_at ?r ?l)(person_at ?p ?l)(bearing ?r ?c)
-        )
-    :effect (and 
-        (is_empty ?r)(crate_at ?c ?l)
-        (not (bearing ?r ?c))(not (needs_meds ?p))(not (is_available ?c))
-    )
-)
-
 
 )

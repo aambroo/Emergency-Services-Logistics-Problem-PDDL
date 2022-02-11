@@ -38,7 +38,7 @@
 
     ;carrier
     (carrier_at ?k - carrier ?l - location)
-    (bearing ?k - carrier ?c - crate)         ;robot ?r is bearing crate ?c
+    (bearing ?k - carrier ?c - crate)         ;carrier ?k is bearing crate ?c
     )
 
 ;moves robot between two locations: ?from and ?to
@@ -78,7 +78,7 @@
         (< (crate_count ?k) 4)  ;controls number of crates loaded
         )
     :effect (and 
-        (bearing ?r ?c)(not (crate_at ?c ?l))
+        (bearing ?k ?c)(not (crate_at ?c ?depot))
         (increase (crate_count ?k) 1)   ;increases crate_count by 1 unit
     )
 )
@@ -86,15 +86,15 @@
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:action deliver_crate
-    :parameters (?r - robot ?c - crate ?where - location ?p - person)
+    :parameters (?r - robot ?c - crate ?where - location ?p - person ?k - carrier)
     :precondition (and 
         (robot_at ?r ?where)(carrier_at ?k ?where)
-        (person_at ?p ?where)(bearing ?r ?c)
+        (person_at ?p ?where)(bearing ?k ?c)
         (> (crate_count ?k) 0)  ;crate number must be non-negative nor nough
         )
     :effect (and 
         (served ?p ?c)(crate_at ?c ?where)
-        (not (bearing ?r ?c))(not (is_available ?c))
+        (not (bearing ?k ?c))(not (is_available ?c))
         (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
     )
 )

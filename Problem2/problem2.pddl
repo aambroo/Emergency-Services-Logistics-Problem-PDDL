@@ -4,7 +4,7 @@
     matteo alice francesco eliana - person
     m1 m2 m3 - meds
     f1 f2 f3 - food
-
+    carrier - carrier
 )
 
 (:init
@@ -28,7 +28,7 @@
     (is_empty operator)
     ;carrier location
     (carrier_at carrier depot)
-    (= (crate_count ?k) 0)
+    (= (crate_count carrier) 0)
 
     ;people location
     (person_at matteo l1)

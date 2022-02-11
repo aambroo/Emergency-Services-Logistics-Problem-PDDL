@@ -25,12 +25,11 @@
 (:predicates 
     ;crates
     (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
-    (is_available ?c - crate)          ;crate can be loaded
+    (is_available ?c - crate)          ;crate can be loaded. A crate becomes unavailable whenever it gets delivered to a person.
     
     ;robot
     (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
     (is_empty ?r - robot)           ;robot ?r is empty
-    
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l

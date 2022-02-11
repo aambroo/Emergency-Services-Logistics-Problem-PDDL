@@ -28,6 +28,7 @@
     (is_empty operator)
     ;carrier location
     (carrier_at carrier depot)
+    ;initialize carrier crate_count
     (= (crate_count carrier) 0)
 
     ;people location

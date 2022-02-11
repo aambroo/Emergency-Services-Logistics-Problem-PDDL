@@ -8,7 +8,7 @@
     carrier - object
     crate - object
     person - object
-    where warehouse - location
+    warehouse - location
     food meds - crate
 )
 
@@ -47,6 +47,7 @@
     :precondition (and 
         (robot_at ?r ?from)(carrier_at ?k ?from)
         (not (= ?from ?to))
+        (>(crate_count ?k)0)
         )
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
@@ -85,14 +86,14 @@
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:action deliver_crate
-    :parameters (?r - robot ?c - crate ?where - location ?p - person ?k - carrier)
+    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier)
     :precondition (and 
-        (robot_at ?r ?where)(carrier_at ?k ?where)
-        (person_at ?p ?where)(bearing ?k ?c)
+        (robot_at ?r ?to)(carrier_at ?k ?to)
+        (person_at ?p ?to)(bearing ?k ?c)
         (> (crate_count ?k) 0)  ;crate number must be non-negative nor nough
         )
     :effect (and 
-        (served ?p ?c)(crate_at ?c ?where)
+        (served ?p ?c)(crate_at ?c ?to)
         (not (bearing ?k ?c))(not (is_available ?c))
         (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
     )

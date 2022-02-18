@@ -72,7 +72,7 @@
     :effect(and
      (at start (not (robot_at ?r ?from)))
      (at start (not(carrier_at ?k ?from)))
-     (at start (not(=(crate_count ?k)0)))   ;controllare
+    ; (at start (not(=(crate_count ?k)0)))               ;controllare
      (at end (robot_at ?r ?to))
      (at end (carrier_at ?k ?to))
     )   
@@ -102,25 +102,20 @@
     :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier)
     :duration (= ?duration 5)
     :condition (and 
-
+        (at start (robot_at ?r ?to))
+        (at start (carrier_at ?k ?to))
+        (at start (person_at ?p ?to))
+        (at start (bearing ?k ?c))
+        (at start (>(crate_count ?k)0))
     )
     :effect (and
-       
+       (at end (served ?p ?c))
+       (at end (not(is_available ?c)))
+       (at end(decrease (crate_count ?k) 1))
+       (at start (not(bearing ?k ?c)))
+       (at end (crate_at ?c ?to))
     )
 
-
-
-    
-    :precondition (and 
-        (robot_at ?r ?to)(carrier_at ?k ?to)
-        (person_at ?p ?to)(bearing ?k ?c)
-        (> (crate_count ?k) 0)  ;crate number must be non-negative nor nough
-        )
-    :effect (and 
-        (served ?p ?c)(crate_at ?c ?to)
-        (not (bearing ?k ?c))(not (is_available ?c))
-        (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
-    )
 )
 
 

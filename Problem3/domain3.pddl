@@ -3,7 +3,7 @@
 (define (domain durativeDelivery)
 
 ;remove requirements that are not needed
-(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality)
+(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
 
 (:types 
     robot - object
@@ -25,8 +25,9 @@
 (:predicates 
     ;crates
     (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
-    (is_available ?c - crate)          ;crate can be loaded. A crate becomes unavailable whenever it gets delivered to a person.
-    
+    (is_loaded ?c - crate)           ;crate unavailable because loaded 
+    (is_delivered ?c - crate)                       ;crate unavailable because delivered
+
     ;robot
     (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
     (is_empty ?r - robot)           ;robot ?r is empty
@@ -50,10 +51,10 @@
         (at start (robot_at ?r ?from))
         (at start(carrier_at ?k ?from))
         (at start (not(=?from ?to)))
-        (at start (>(crate_count ?k)0))      
+        (at start (>(crate_count ?k)0)) 
+        (over all (is_empty ?r))                ;the robot cannot deliver while moving to a location 
     )
     :effect(and
-        (at start (>(crate_count ?k)0))
         (at start (not(robot_at ?r ?from)))
         (at start(not(carrier_at ?k ?from)))
         (at end(robot_at ?r ?to))
@@ -68,32 +69,39 @@
         (at start(robot_at ?r ?from))
         (at start (carrier_at ?k ?from))
         (at start (=(crate_count ?k)0)) ;this forces ?k and ?r to deliver crates first.
+        (over all (is_empty ?r))        ;the robot cannot deliver while going back to base    
     )
     :effect(and
      (at start (not (robot_at ?r ?from)))
      (at start (not(carrier_at ?k ?from)))
-    ; (at start (not(=(crate_count ?k)0)))               ;controllare
      (at end (robot_at ?r ?to))
      (at end (carrier_at ?k ?to))
     )   
 )
 ;load (generic) crate ?c onto robot ?r at location ?l
-(:durative-actions load_crate
+(:durative-action load_crate
     :parameters (?depot - warehouse ?c - crate ?r - robot ?k - carrier)
     :duration(= ?duration 5)
     :condition (and
         (at start (robot_at ?r ?depot))
         (at start (carrier_at ?k ?depot))
         (at start (crate_at ?c ?depot))
-        (at start (is_available ?c))
+        (at start (not(is_loaded ?c)))
+        (at start (not(is_delivered ?c)))
         (at start (not(bearing ?k ?c)))    ;crate must not be loaded yet
         (at start (<(crate_count ?k)4))    ;controls number of crates loaded
+        (at start (is_empty ?r))           ;prevent parallel actions
+    
     )
     :effect (and
-        (at start (not(is_available ?c)))   ; controllareee!!!!!!!!!!!!!
-        (at start(bearing ?k ?c))
-        (at start (not (crate_at ?c ?depot)))
-        (at end(increase (crate_count ?k) 1))
+        (at start (not(is_empty ?r))) 
+        (at end (not(is_loaded ?c)))         ;mainly set constant crate count
+        (at end (bearing ?k ?c))
+        (at end (not (crate_at ?c ?depot)))
+        (at end (is_loaded ?c))
+        (at end (increase (crate_count ?k) 1))
+        (at end (is_empty ?r))  
+             
     )
 )
 
@@ -105,18 +113,21 @@
         (at start (robot_at ?r ?to))
         (at start (carrier_at ?k ?to))
         (at start (person_at ?p ?to))
+        (at start (is_loaded ?c))
+        (at start (not(is_delivered ?c)))
         (at start (bearing ?k ?c))
         (at start (>(crate_count ?k)0))
+        (at start (is_empty ?r))
     )
     :effect (and
+       (at start (not(is_empty ?r)))
        (at end (served ?p ?c))
-       (at end (not(is_available ?c)))
-       (at end(decrease (crate_count ?k) 1))
-       (at start (not(bearing ?k ?c)))
+       (at end (not(is_loaded ?c)))
+       (at end (is_delivered ?c))
+       (at end (not(bearing ?k ?c)))
        (at end (crate_at ?c ?to))
+       (at end(decrease (crate_count ?k) 1))
+       (at end (is_empty ?r))
     )
-
 )
-
-
-
+)

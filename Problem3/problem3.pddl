@@ -1,6 +1,6 @@
 (define (problem problem3) (:domain durativeDelivery)
 (:objects
-    depot l1 l2 l3 l4 l5 l6 l7 - location
+    l1 l2 l3 l4 l5 l6 l7 - location
     matteo alice francesco eliana - person
     m1 m2 m3 - meds
     f1 f2 f3 - food
@@ -16,12 +16,20 @@
     (crate_at f2 depot)
     (crate_at f3 depot)
     ;crate availability
-    (is_available m1)
-    (is_available m2)
-    (is_available m3)
-    (is_available f1)
-    (is_available f2)
-    (is_available f3)
+
+    (not(is_loaded m1))
+    (not(is_loaded m2))
+    (not(is_loaded m3))
+    (not(is_loaded f1))
+    (not(is_loaded f2))
+    (not(is_loaded f3)) 
+
+    (not(is_delivered m1))
+    (not(is_delivered m2))
+    (not(is_delivered m3))
+    (not(is_delivered f1))
+    (not(is_delivered f2))
+    (not(is_delivered f3))   
 
     ;robot location
     (robot_at operator depot)

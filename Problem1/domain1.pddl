@@ -22,7 +22,7 @@
     operator - robot
 )
 
-(:predicates 
+(:predicates
     ;crates
     (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
     (is_available ?c - crate)          ;crate can be loaded

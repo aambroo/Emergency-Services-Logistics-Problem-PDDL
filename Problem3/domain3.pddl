@@ -4,7 +4,7 @@
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :strips :typing :durative-actions :disjunctive-preconditions :equality :numeric-fluents :negative-preconditions )
+(:requirements :strips :typing :durative-actions )
 
 (:types 
     robot - object
@@ -14,14 +14,15 @@
     warehouse - location
     food meds - crate
 )
-; crate counter function
-(:functions
-    (crate_count ?k - carrier)
-)
+; crate counter function --> removed because :fluent
+;(:functions
+;    (crate_count ?k - carrier)
+;)
 ; un-comment following line if constants are needed
 (:constants
     operator - robot
     depot - warehouse
+    init_num - amount
 )
 (:predicates 
     ;crates
@@ -40,6 +41,14 @@
     ;carrier
     (carrier_at ?k - carrier ?l - location)
     (bearing ?k - carrier ?c - crate)         ;carrier ?k is bearing crate ?c
+
+    ;predicates to avoid using fluents or ADLs
+    ;add crate to crate_count
+    (update ?init_amount ?final_amount - amount)
+    ;pop crate to crate_count
+    (pop ?orig_amount ?decrease - amount)
+    ;differentiate crate_count per carrier
+    (crate_count ?k - carrier ?num_crates - amount)
 )
 
 
@@ -52,7 +61,7 @@
         (at start (robot_at ?r ?from))
         (at start(carrier_at ?k ?from))
         (at start (not(=?from ?to)))
-        (at start (>(crate_count ?k)0)) 
+        ;(at start (>(crate_count ?k)0))        ;cannot use ADLs
         (over all (is_empty ?r))                ;the robot cannot deliver while moving to a location 
     )
     :effect(and
@@ -69,8 +78,9 @@
     :condition (and 
         (at start(robot_at ?r ?from))
         (at start (carrier_at ?k ?from))
-        (at start (=(crate_count ?k)0)) ;this forces ?k and ?r to deliver crates first.
-        (over all (is_empty ?r))        ;the robot cannot deliver while going back to base    
+        ;(at start (=(crate_count ?k)0)) ;cannot use ADLs
+        (over all (is_empty ?r))        ;the robot cannot deliver while going back to base
+        (at start crate_count ?k init_num)      ;setting crate amount to init_num for carrier ?k
     )
     :effect(and
      (at start (not (robot_at ?r ?from)))
@@ -81,7 +91,7 @@
 )
 ;load (generic) crate ?c onto robot ?r at location ?l
 (:durative-action load_crate
-    :parameters (?depot - warehouse ?c - crate ?r - robot ?k - carrier)
+    :parameters (?depot - warehouse ?c - crate ?r - robot ?k - carrier ?init_amount ?final_amount - amount)
     :duration(= ?duration 5)
     :condition (and
         (at start (robot_at ?r ?depot))
@@ -90,8 +100,11 @@
         (at start (not(is_loaded ?c)))
         (at start (not(is_delivered ?c)))
         (at start (not(bearing ?k ?c)))    ;crate must not be loaded yet
-        (at start (<(crate_count ?k)4))    ;controls number of crates loaded
+        ;(at start (<(crate_count ?k)4))   ;cannot use ADLs
         (at start (is_empty ?r))           ;prevent parallel actions
+        (at start (update ?init_amount ?final_amount)) ;updating initial and final heaps, essential for counting crates
+        
+        (over all (crate_count ?k ?init_amount))    ;this prevents multiple robots to load multiple crates at a time
     
     )
     :effect (and
@@ -100,15 +113,17 @@
         (at end (bearing ?k ?c))
         (at end (not (crate_at ?c ?depot)))
         (at end (is_loaded ?c))
-        (at end (increase (crate_count ?k) 1))
-        (at end (is_empty ?r))  
+        ;(at end (increase (crate_count ?k) 1)) ;cannot use ADLs
+        (at end (is_empty ?r))
+        (at end (not (crate_count ?k ?init_amount)))
+        (at end (crate_count ?k ?final_amount))
              
     )
 )
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:durative-action deliver_crate
-    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier)
+    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier ?init_amount ?final_amount - amount)
     :duration (= ?duration 5)
     :condition (and 
         (at start (robot_at ?r ?to))
@@ -117,8 +132,11 @@
         (at start (is_loaded ?c))
         (at start (not(is_delivered ?c)))
         (at start (bearing ?k ?c))
-        (at start (>(crate_count ?k)0))
+        ;(at start (>(crate_count ?k)0))    ;cannot use ADLs
+        (at start (update ?init_amount ?final_amount))
         (at start (is_empty ?r))
+
+        (over all (crate_count ?k ?init_amount))    ;this prevents multiple robots to deliver multiple crates at a time
     )
     :effect (and
        (at start (not(is_empty ?r)))
@@ -127,8 +145,11 @@
        (at end (is_delivered ?c))
        (at end (not(bearing ?k ?c)))
        (at end (crate_at ?c ?to))
-       (at end(decrease (crate_count ?k) 1))
+       ;(at end(decrease (crate_count ?k) 1))   ;cannot use ADLs
+       (at end (not (crate_count ?k ?init_amount)))
+       (at end (crate_count ?k ?final_amount))
        (at end (is_empty ?r))
+
     )
 )
 )

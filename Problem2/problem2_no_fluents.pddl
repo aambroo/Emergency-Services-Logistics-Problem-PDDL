@@ -1,4 +1,4 @@
-(define (problem problem3) (:domain durativeDelivery)
+(define (problem problem2_no_fluents) (:domain normalDelivery_no_fluents)
 (:objects
     l1 l2 l3 l4 l5 l6 l7 - location
     matteo alice francesco eliana giorgio - person
@@ -41,6 +41,7 @@
     ;every person is not served
     
     
+    
 
     ;add-pop relationships: \ref{elevator problem}
     (add n0 n1)
@@ -76,19 +77,13 @@
     
 
     ;Francesco needs both food and meds
-    (or
-        (served francesco m1)(served francesco m2)(served francesco m3)
-    )
-    (or
-        (served francesco m1)(served francesco m2)(served francesco m3)
-    )
+    (or (served francesco m1)(served francesco m2)(served francesco m3))
+    (or(served francesco m1)(served francesco m2)(served francesco m3))
     ;(exists (?c - meds) (and (served francesco ?c)))
     ;(exists (?c - food) (and (served francesco ?c)))
 
     ;Alice needs meds
-    (or
-        (served alice f1)(served alice f2)(served alice f3)(served alice f4)
-    )
+    (or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
     ;(exists (?c - meds) (and (served alice ?c)))
 ))
 

@@ -1,6 +1,6 @@
 ;Header and description
 
-(define (domain durativeDelivery)
+(define (domain normalDelivery_no_fluents)
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
@@ -8,11 +8,13 @@
 
 (:types 
     robot - object
+    location - object
     carrier - object
     crate - object
     person - object
-    base - location
+    loc base - location
     food meds - crate
+    amount - object
 )
 ; crate counter function --> removed because :fluent
 ;(:functions
@@ -27,22 +29,22 @@
 
 (:predicates 
     ;crates
-    (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
+    (crate_at ?c - crate ?l - loc)     ;crate ?c crate_at at location ?l
     ;(is_loaded ?c - crate)           ;crate unavailable because loaded 
     (is_delivered ?c - crate)                       ;crate unavailable because delivered
 
     ;robot
-    (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
+    (robot_at ?r - robot ?l - loc)     ;robot ?r is at location ?l
     (is_empty ?r - robot)           ;robot ?r is empty
     
     ;people
-    (person_at ?p - person ?l - location)       ;person ?p is at location ?l
+    (person_at ?p - person ?l - loc)       ;person ?p is at location ?l
     (served ?p - person ?c - crate)              ;person ?p has been served with crate ?c
     ;(needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
     ;(not_needs ?p - person ?cont - content)
 
     ;carrier
-    (carrier_at ?k - carrier ?l - location)
+    (carrier_at ?k - carrier ?l - loc)
     (bearing ?k - carrier ?c - crate)         ;carrier ?k is bearing crate ?c
 
     ;predicates to avoid using fluents
@@ -56,7 +58,7 @@
 ;moves robot between two locations: ?from and ?to
 ;NOTE: crates of no kind are involved
 (:action move
-    :parameters (?r - robot ?k - carrier ?from ?to - location ?depot - base)
+    :parameters (?r - robot ?k - carrier ?from ?to - loc ?depot - base)
     :precondition (and 
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
@@ -71,7 +73,7 @@
 )
 ;send robot ?r and carrier ?k back to base (depot)
 (:action back_to_base
-    :parameters (?from - location ?to - base ?r - robot ?k - carrier)
+    :parameters (?from - loc ?to - base ?r - robot ?k - carrier)
     :precondition (and 
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
@@ -99,11 +101,8 @@
     
     )
     :effect (and
-        ;(not(is_loaded ?c))         ;mainly set constant crate count
         (bearing ?k ?c)
         (not (crate_at ?c ?depot))
-        ;(is_loaded ?c)
-        ;(at end (increase (crate_count ?k) 1)) ;cannot use ADLs
         (is_empty ?r)
         (not (crate_count ?k ?init_amount))
         (crate_count ?k ?final_amount)
@@ -113,7 +112,7 @@
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:action deliver_crate
-    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier ?init_amount ?final_amount - amount)
+    :parameters (?r - robot ?c - crate ?to - loc ?p - person ?k - carrier ?init_amount ?final_amount - amount)
     :precondition (and 
         (robot_at ?r ?to)
         (carrier_at ?k ?to)
@@ -132,7 +131,6 @@
        (served ?p ?c)
        (not(bearing ?k ?c))
        (crate_at ?c ?to)
-       ;(at end(decrease (crate_count ?k) 1))   ;cannot use ADLs
        (not (crate_count ?k ?init_amount))
        (crate_count ?k ?final_amount)
 

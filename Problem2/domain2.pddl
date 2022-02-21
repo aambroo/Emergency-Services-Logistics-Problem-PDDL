@@ -39,8 +39,8 @@
 ;crate count function
 (:functions
     (crate_count ?c - crate)
+    (carier_capacity )
 )
-
 
 
 ;moves robot between two locations: ?from and ?to

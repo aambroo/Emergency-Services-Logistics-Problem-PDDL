@@ -46,7 +46,7 @@
     ;add crate to crate_count
     (update ?init_amount ?final_amount - amount)
     ;pop crate to crate_count
-    (pop ?orig_amount ?decrease - amount)
+    ;(pop ?orig_amount ?decrease - amount)
     ;differentiate crate_count per carrier
     (crate_count ?k - carrier ?num_crates - amount)
 )
@@ -80,7 +80,7 @@
         (at start (carrier_at ?k ?from))
         ;(at start (=(crate_count ?k)0)) ;cannot use ADLs
         (over all (is_empty ?r))        ;the robot cannot deliver while going back to base
-        (at start crate_count ?k init_num)      ;setting crate amount to init_num for carrier ?k
+        (at start (crate_count ?k init_num))      ;setting crate amount to init_num for carrier ?k
     )
     :effect(and
      (at start (not (robot_at ?r ?from)))

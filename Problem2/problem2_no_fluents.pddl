@@ -1,13 +1,13 @@
 (define (problem problem2_no_fluents) (:domain normalDelivery_no_fluents)
 (:objects
-    l1 l2 l3 l4 l5 l6 l7 - location
+    l1 l2 l3 l4 l5 l6 l7 - loc
     matteo alice francesco eliana giorgio - person
     f1 f2 f3 f4 - food
     m1 m2 m3 - meds
     carrier - carrier
 
     ;adding amount objects
-    n1 n2 n3 n4 n5 n6 n7 - amount
+    n1 n2 n3 n4 - amount
 )
 
 (:init
@@ -28,7 +28,6 @@
     ;carrier location
     (carrier_at carrier depot)
     ;initialize carrier crate_count
-    ;(= (crate_count carrier) 0)        <-- can't use no more
     (crate_count carrier n0)            ;resets the counter
 
     ;people location
@@ -48,12 +47,7 @@
     (add n1 n2)
     (add n2 n3)
     (add n3 n4)
-    (add n4 n5)
-    (add n5 n6)
-    (add n6 n7)
-    (pop n7 n6)
-    (pop n6 n5)
-    (pop n5 n4)
+
     (pop n4 n3)
     (pop n3 n2)
     (pop n2 n1)

@@ -37,8 +37,9 @@
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
-    (served ?p - person)              ;person ?p has been served with crate ?c
+    ;(served ?p - person)              ;person ?p has been served with crate ?c
     (needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
+    (not_needs ?p - person ?cont - content)
 
     ;carrier
     (carrier_at ?k - carrier ?l - location)
@@ -145,7 +146,7 @@
     :effect (and
        (at start (not(is_empty ?r)))
        (at end (not (needs ?p ?cont)))
-       (at end (served ?p))
+       (at end (not_needs ?p ?cont))
        (at end (not(is_loaded ?c)))
        (at end (is_delivered ?c))
        (at end (not(bearing ?k ?c)))

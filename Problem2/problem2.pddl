@@ -5,6 +5,7 @@
     m1 m2 m3 - meds
     f1 f2 f3 - food
     carrier - carrier
+    operator - robot
 )
 
 (:init
@@ -25,7 +26,7 @@
 
     ;robot location
     (robot_at operator depot)
-    (is_empty operator)
+    ;(is_empty operator)
     ;carrier location
     (carrier_at carrier depot)
     ;initialize carrier crate_count
@@ -36,6 +37,9 @@
     (person_at eliana l2)
     (person_at francesco l2)
     (person_at alice l7)
+
+    ;initialize total_cost to zero
+    (= (total_cost) 0)
 
 )
 
@@ -67,5 +71,8 @@
         (served alice f1)(served alice f2)(served alice f3)
     )
 ))
+(:metric minimize 
+    (total_cost)
+)
 
 )

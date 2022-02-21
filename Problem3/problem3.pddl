@@ -82,9 +82,8 @@
 
     ;people needs
     (needs eliana food)
-    (needs matteo food)
-    (needs matteo food)
-    (needs alice meds)
+    (needs matteo meds)
+    (needs alice food)
     (needs francesco meds)
     (needs francesco food)
 
@@ -97,8 +96,8 @@
     ;(or
     ;    (served eliana f1)(served eliana f2)(served eliana f3)
     ;)
-    (served eliana)
-    (not (needs eliana food))
+    (not_needs eliana food)
+    ;(not (needs eliana food))
 
     
     ;Matteo needs 2 crates of meds
@@ -108,8 +107,8 @@
     ;(or
     ;    (served matteo m1)(served matteo m2)(served matteo m3)
     ;)
-    (served matteo)
-    (not (needs matteo meds))(not (needs matteo meds))
+    (not_needs matteo meds)
+    ;(not (needs matteo meds))(not (needs matteo meds))
 
     ;Francesco needs both food and meds
     ;(or
@@ -118,16 +117,17 @@
     ;(or
     ;    (served francesco m1)(served francesco m2)(served francesco m3)
     ;)
-    (served francesco)
-    (not (needs francesco food))(not (needs francesco meds))
+    (not_needs francesco meds)
+    (not_needs francesco food)
+    ;(not (needs francesco food))(not (needs francesco meds))
 
 
     ;Alice needs meds
     ;(or
     ;    (served alice f1)(served alice f2)(served alice f3)
     ;)
-    (served alice)
-    (not (needs alice meds))
+    (not_needs alice food)
+    ;(not (needs alice meds))
 ))
 
 )

@@ -8,24 +8,20 @@
     carrier - object
     crate - object
     person - object
-    warehouse - location
+    depot - location
     food meds - crate
 )
 
 ; crate counter function
 (:functions
     (crate_count ?k - carrier)
-)
-; un-comment following line if constants are needed
-(:constants
-    operator - robot
-    depot - warehouse
+    (total_cost)
 )
 
-(:predicates 
+(:predicates
     ;crates
     (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
-    (is_available ?c - crate)          ;crate can be loaded. A crate becomes unavailable whenever it gets delivered to a person.
+    (is_available ?c - crate)          ;crate can be loaded
     
     ;robot
     (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
@@ -34,11 +30,13 @@
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
     (served ?p - person ?c - crate)              ;person ?p has been served with crate ?c
-
+    
     ;carrier
     (carrier_at ?k - carrier ?l - location)
-    (bearing ?k - carrier ?c - crate)         ;carrier ?k is bearing crate ?c
+    (bearing ?k - carrier ?c - crate)
+
     )
+
 
 ;moves robot between two locations: ?from and ?to
 ;NOTE: crates of no kind are involved
@@ -52,6 +50,7 @@
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (not (robot_at ?r ?from))(not (carrier_at ?k ?from))
+        (increase (total_cost) 10)
         )
 )
 
@@ -65,6 +64,7 @@
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (not (carrier_at ?k ?from))(not (robot_at ?r ?from))
+        (increase (total_cost) 20)
         )
 )
 
@@ -80,6 +80,7 @@
     :effect (and 
         (bearing ?k ?c)(not (crate_at ?c ?depot))
         (increase (crate_count ?k) 1)   ;increases crate_count by 1 unit
+        (increase (total_cost) 1)
     )
 )
 
@@ -96,6 +97,7 @@
         (served ?p ?c)(crate_at ?c ?to)
         (not (bearing ?k ?c))(not (is_available ?c))
         (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
+        (increase (total_cost) 1)
     )
 )
 

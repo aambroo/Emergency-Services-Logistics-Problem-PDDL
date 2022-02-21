@@ -9,4 +9,6 @@
 - `empty_check` to prevent the carrier to leave the depot empty is *removed*.
 
 ### problem3.pddl
-- `or` statements used in previous problem formulations must be avoided because not supported by OPTIC planner.
+- `or` statements used in previous problem formulations must be avoided because _negative preconditions_ are not supported by OPTIC planner.
+- by removing `or` from the goal statement we are forced to drop the possibility of having multiple crates delivered to the same person.
+- there is, however, a way around this problem --> which is to replace the `served` predicate with two different predicates: `(needs ?p - person ?cont - content)`, and  `(not_needs ?p - person ?cont - cont)`. Despite this 'trick' what remains not possible achieving is having two crates with the same content delivered to the same person.

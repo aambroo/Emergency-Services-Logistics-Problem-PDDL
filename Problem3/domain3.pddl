@@ -4,7 +4,7 @@
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :strips :typing :durative-actions :negative-preconditions :disjunctive-preconditions)
+(:requirements :strips :typing :durative-actions)
 
 (:types 
     robot - object
@@ -12,7 +12,7 @@
     crate - object
     person - object
     base - location
-    food meds - crate
+    content - object
 )
 ; crate counter function --> removed because :fluent
 ;(:functions
@@ -29,6 +29,7 @@
     (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
     (is_loaded ?c - crate)           ;crate unavailable because loaded 
     (is_delivered ?c - crate)                       ;crate unavailable because delivered
+    (contains ?c - crate ?cont - content)       ;added as a result of OPTIC non-compatibility
 
     ;robot
     (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
@@ -36,7 +37,8 @@
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
-    (served ?p - person ?c - crate)              ;person ?p has been served with crate ?c
+    (served ?p - person)              ;person ?p has been served with crate ?c
+    (needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
 
     ;carrier
     (carrier_at ?k - carrier ?l - location)
@@ -97,9 +99,9 @@
         (at start (robot_at ?r ?depot))
         (at start (carrier_at ?k ?depot))
         (at start (crate_at ?c ?depot))
-        (at start (not(is_loaded ?c)))
-        (at start (not(is_delivered ?c)))
-        (at start (not(bearing ?k ?c)))    ;crate must not be loaded yet
+        ;(at start (not(is_loaded ?c)))
+        ;(at start (not(is_delivered ?c)))
+        ;(at start (not(bearing ?k ?c)))    ;crate must not be loaded yet
         ;(at start (<(crate_count ?k)4))   ;cannot use ADLs
         (at start (is_empty ?r))           ;prevent parallel actions
         (at start (add ?init_amount ?final_amount)) ;updating initial and final heaps, essential for counting crates
@@ -123,14 +125,16 @@
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:durative-action deliver_crate
-    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier ?init_amount ?final_amount - amount)
+    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier ?init_amount ?final_amount - amount ?cont - content)
     :duration (= ?duration 5)
     :condition (and 
         (at start (robot_at ?r ?to))
         (at start (carrier_at ?k ?to))
         (at start (person_at ?p ?to))
+        (at start (needs ?p ?cont))
         (at start (is_loaded ?c))
-        (at start (not(is_delivered ?c)))
+        (at start (contains ?c ?cont))
+        ;(at start (not(is_delivered ?c)))
         (at start (bearing ?k ?c))
         ;(at start (>(crate_count ?k)0))    ;cannot use ADLs
         (at start (pop ?init_amount ?final_amount))
@@ -140,7 +144,8 @@
     )
     :effect (and
        (at start (not(is_empty ?r)))
-       (at end (served ?p ?c))
+       (at end (not (needs ?p ?cont)))
+       (at end (served ?p))
        (at end (not(is_loaded ?c)))
        (at end (is_delivered ?c))
        (at end (not(bearing ?k ?c)))

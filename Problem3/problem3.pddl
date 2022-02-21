@@ -37,13 +37,23 @@
     ;carrier location
     (carrier_at carrier depot)
     ;initialize carrier crate_count
-    (= (crate_count carrier) 0)
+    ;(= (crate_count carrier) 0)        <-- can't use no more
+    (crate_count carrier n0)            ;resets the counter
 
     ;people location
     (person_at matteo l1)
     (person_at eliana l2)
     (person_at francesco l2)
     (person_at alice l7)
+
+    ;add-pop relationships: \ref{elevator problem}
+    (add n0 n1)
+    (add n1 n2)
+    (add n2 n3)
+    (pop n3 n2)
+    (pop n2 n1)
+    (pop n1 n0)
+
 
 )
 

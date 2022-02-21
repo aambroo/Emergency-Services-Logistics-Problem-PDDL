@@ -22,7 +22,7 @@
 (:constants
     operator - robot
     depot - base
-    init_num - amount
+    n0 - amount
 )
 (:predicates 
     ;crates
@@ -44,9 +44,9 @@
 
     ;predicates to avoid using fluents or ADLs
     ;add crate to crate_count
-    (update ?init_amount ?final_amount - amount)
+    (add ?init_amount ?final_amount - amount)
     ;pop crate to crate_count
-    ;(pop ?orig_amount ?decrease - amount)
+    (pop ?orig_amount ?decrease - amount)
     ;differentiate crate_count per carrier
     (crate_count ?k - carrier ?num_crates - amount)
 )
@@ -80,7 +80,7 @@
         (at start (carrier_at ?k ?from))
         ;(at start (=(crate_count ?k)0)) ;cannot use ADLs
         (over all (is_empty ?r))        ;the robot cannot deliver while going back to base
-        (at start (crate_count ?k init_num))      ;setting crate amount to init_num for carrier ?k
+        (at start (crate_count ?k n0))      ;setting crate amount to initial number (n0) for carrier ?k
     )
     :effect(and
      (at start (not (robot_at ?r ?from)))
@@ -102,7 +102,7 @@
         (at start (not(bearing ?k ?c)))    ;crate must not be loaded yet
         ;(at start (<(crate_count ?k)4))   ;cannot use ADLs
         (at start (is_empty ?r))           ;prevent parallel actions
-        (at start (update ?init_amount ?final_amount)) ;updating initial and final heaps, essential for counting crates
+        (at start (add ?init_amount ?final_amount)) ;updating initial and final heaps, essential for counting crates
         
         (over all (crate_count ?k ?init_amount))    ;this prevents multiple robots to load multiple crates at a time
     
@@ -133,7 +133,7 @@
         (at start (not(is_delivered ?c)))
         (at start (bearing ?k ?c))
         ;(at start (>(crate_count ?k)0))    ;cannot use ADLs
-        (at start (update ?init_amount ?final_amount))
+        (at start (pop ?init_amount ?final_amount))
         (at start (is_empty ?r))
 
         (over all (crate_count ?k ?init_amount))    ;this prevents multiple robots to deliver multiple crates at a time

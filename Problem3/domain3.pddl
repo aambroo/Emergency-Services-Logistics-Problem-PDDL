@@ -4,14 +4,14 @@
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :strips :typing :durative-actions :negative-preconditions)
+(:requirements :strips :typing :durative-actions :negative-preconditions :disjunctive-preconditions)
 
 (:types 
     robot - object
     carrier - object
     crate - object
     person - object
-    warehouse - location
+    base - location
     food meds - crate
 )
 ; crate counter function --> removed because :fluent
@@ -46,7 +46,7 @@
     ;add crate to crate_count
     (add ?init_amount ?final_amount - amount)
     ;pop crate to crate_count
-    (pop ?orig_amount ?decrease - amount)
+    (pop ?orig_amount ?final_amount - amount)
     ;differentiate crate_count per carrier
     (crate_count ?k - carrier ?num_crates - amount)
 )
@@ -84,7 +84,7 @@
     )
     :effect(and
      (at start (not (robot_at ?r ?from)))
-     (at start (not(carrier_at ?k ?from)))
+     (at start (not (carrier_at ?k ?from)))
      (at end (robot_at ?r ?depot))
      (at end (carrier_at ?k ?depot))
     )   

@@ -5,6 +5,9 @@
     m1 m2 m3 - meds
     f1 f2 f3 - food
     carrier - carrier
+
+    ;adding amount objects
+    n1 n2 n3 n4 - amount
 )
 
 (:init

@@ -38,6 +38,10 @@
     (person_at alice l7)
     (person_at giorgio l3)
 
+    ;every person is not served
+    
+    
+
     ;add-pop relationships: \ref{elevator problem}
     (add n0 n1)
     (add n1 n2)
@@ -60,20 +64,14 @@
 (:goal (and
     
     ;Eliana needs food
-    (or
-        (served eliana f1)(served eliana f2)(served eliana f3)(served eliana f4)
-    )
+    (or (served eliana f1)(served eliana f2)(served eliana f3)(served eliana f4))
     ;(exists (?c - food) (and (served eliana ?c)))
 
 
     
     ;Matteo needs 2 crates of meds
-    (or
-        (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4)
-    )
-    (or
-        (served matteo m1)(served matteo m2)(served matteo m3)
-    )
+    (or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
+    (or (served matteo m1)(served matteo m2)(served matteo m3))
     ;(exists (?c - meds) (and (served matteo ?c)))
     
 

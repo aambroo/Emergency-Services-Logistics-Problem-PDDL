@@ -4,7 +4,7 @@
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :strips :typing :equality :negative-preconditions :disjunctive-preconditions)
+(:requirements :typing :equality :negative-preconditions :disjunctive-preconditions)
 
 (:types 
     robot - object
@@ -37,7 +37,7 @@
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
-    (served ?p - person)              ;person ?p has been served with crate ?c
+    (served ?p - person ?c - crate)              ;person ?p has been served with crate ?c
     ;(needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
     ;(not_needs ?p - person ?cont - content)
 
@@ -45,7 +45,7 @@
     (carrier_at ?k - carrier ?l - location)
     (bearing ?k - carrier ?c - crate)         ;carrier ?k is bearing crate ?c
 
-    ;predicates to avoid using fluents or ADLs
+    ;predicates to avoid using fluents
     (add ?init_amount ?final_amount - amount)
     (pop ?orig_amount ?final_amount - amount)
     ;differentiate crate_count per carrier
@@ -129,7 +129,7 @@
     :effect (and
        ;(not(is_loaded ?c))
        (is_delivered ?c)
-       (served ?p)
+       (served ?p ?c)
        (not(bearing ?k ?c))
        (crate_at ?c ?to)
        ;(at end(decrease (crate_count ?k) 1))   ;cannot use ADLs

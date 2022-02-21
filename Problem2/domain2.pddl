@@ -39,7 +39,7 @@
 ;crate count function
 (:functions
     (crate_count ?c - crate)
-    (carier_capacity )
+    (carier_capacity)
 )
 
 

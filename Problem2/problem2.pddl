@@ -1,6 +1,7 @@
 (define (problem problem2) (:domain normalDelivery)
 (:objects
-
+    operator - robot
+    depot - base
     l1 l2 l3 l4 l5 l6 l7 - location
     matteo alice francesco eliana - person
     m1 m2 m3 - meds
@@ -9,6 +10,12 @@
 )
 
 (:init
+   ;initialize total_cost to zero
+    (=(total-cost)0)
+
+    ;set carrier capacity to 4
+    (=(carrier_capacity carrier)4)
+
     ;crates location
     (crate_at m1 depot)
     (crate_at m2 depot)
@@ -16,6 +23,7 @@
     (crate_at f1 depot)
     (crate_at f2 depot)
     (crate_at f3 depot)
+
     ;crate availability
     (is_available m1)
     (is_available m2)
@@ -29,6 +37,7 @@
     ;(is_empty operator)
     ;carrier location
     (carrier_at carrier depot)
+
     ;initialize carrier crate_count
     (= (crate_count carrier) 0)
 
@@ -37,9 +46,6 @@
     (person_at eliana l2)
     (person_at francesco l2)
     (person_at alice l7)
-
-    ;initialize total_cost to zero
-    (= (total_cost) 0)
 
 )
 
@@ -59,6 +65,7 @@
     ;Alice needs food
     (or (served alice f1)(served alice f2)(served alice f3))
 ))
+
 (:metric minimize 
     (total_cost)
 )

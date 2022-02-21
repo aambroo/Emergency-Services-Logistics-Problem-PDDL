@@ -1,21 +1,22 @@
 (define (domain normalDelivery)
 
 ;remove requirements that are not needed
-(:requirements :typing :fluents :equality :negative-preconditions :disjunctive-preconditions)
+(:requirements :strips :typing :equality :negative-preconditions :fluents)
 
 (:types 
     robot - object
     carrier - object
     crate - object
     person - object
-    base - location
+    location - object
+    loc base - location
     food meds - crate
 )
 
-(:constants
-    operator - robot
-    depot - base
-)
+;(:constants
+;    operator - robot
+;    depot - base
+;)
 
 
 (:predicates
@@ -39,60 +40,62 @@
 ;crate count function
 (:functions
     (crate_count ?c - crate)
-    (carier_capacity)
+    (total-cost)
+    (carrier_capacity ?k - carrier)
 )
 
 
 ;moves robot between two locations: ?from and ?to
 ;NOTE: crates of no kind are involved
 (:action move
-    :parameters (?r - robot ?k - carrier ?from ?to - location)
+    :parameters (?r - robot ?k - carrier ?from - location ?to - loc)
     :precondition (and 
         (robot_at ?r ?from)(carrier_at ?k ?from)
         (not (= ?from ?to))
-        (>(crate_count ?k)0)
+        ;(>(crate_count ?k)0)
         )
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (not (robot_at ?r ?from))(not (carrier_at ?k ?from))
-        ;(increase (total_cost) 10)
+        (increase (total-cost) 1)
         )
 )
 
 ;send robot ?r and carrier ?k back to base (depot)
 (:action back_to_base
-    :parameters (?from - location ?to - warehouse ?r - robot ?k - carrier)
+    :parameters (?from - loc ?to - base ?r - robot ?k - carrier)
     :precondition (and 
         (carrier_at ?k ?from)(robot_at ?r ?from)
+        (not(=(?from ?to)))
         (= (crate_count ?k) 0) ;this forces ?k and ?r to deliver crates first.
         )
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (not (carrier_at ?k ?from))(not (robot_at ?r ?from))
-        ;(increase (total_cost) 20)
+        (increase (total-cost) 1)
         )
 )
 
 ;load (generic) crate ?c onto robot ?r at location ?l
 (:action load_crate
-    :parameters (?depot - warehouse ?c - crate ?r - robot ?k - carrier)
+    :parameters (?depot - base ?c - crate ?r - robot ?k - carrier)
     :precondition (and 
         (robot_at ?r ?depot)(carrier_at ?k ?depot)
         (crate_at ?c ?depot)(is_available ?c)
-        (not (bearing ?k ?c))   ;crate must not be loaded yet
-        (< (crate_count ?k) 4)  ;controls number of crates loaded
+        (not (bearing ?k ?c))   ;crate must not be loaded yet  -> DUBBIO!!!!
+        (< (crate_count ?k) (carrier_capacity ?k))  ;controls number of crates loaded
         )
     :effect (and 
         (bearing ?k ?c)(not (crate_at ?c ?depot))
         (increase (crate_count ?k) 1)   ;increases crate_count by 1 unit
-        ;(increase (total_cost) 5)
+        (increase (total_cost) 1)
     )
 )
 
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:action deliver_crate
-    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier)
+    :parameters (?r - robot ?c - crate ?to - loc ?p - person ?k - carrier)
     :precondition (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (person_at ?p ?to)(bearing ?k ?c)
@@ -103,7 +106,7 @@
         (served ?p ?c)(crate_at ?c ?to)
         (not (bearing ?k ?c))(not (is_available ?c))
         (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
-        ;(increase (total_cost) 1)
+        (increase (total_cost) 1)
     )
 )
 

@@ -67,7 +67,7 @@
 ))
 
 (:metric minimize 
-    (total_cost)
+    (total-cost)
 )
 
 )

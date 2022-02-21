@@ -88,7 +88,7 @@
     :effect (and 
         (bearing ?k ?c)(not (crate_at ?c ?depot))
         (increase (crate_count ?k) 1)   ;increases crate_count by 1 unit
-        (increase (total_cost) 1)
+        (increase (total-cost) 1)
     )
 )
 
@@ -106,7 +106,7 @@
         (served ?p ?c)(crate_at ?c ?to)
         (not (bearing ?k ?c))(not (is_available ?c))
         (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
-        (increase (total_cost) 1)
+        (increase (total-cost) 1)
     )
 )
 

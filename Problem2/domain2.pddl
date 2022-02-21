@@ -8,15 +8,15 @@
     carrier - object
     crate - object
     person - object
-    depot - location
+    base - location
     food meds - crate
 )
 
-; crate counter function
-(:functions
-    (crate_count ?k - carrier)
-    (total_cost)
+(:constants
+    operator - robot
+    depot - base
 )
+
 
 (:predicates
     ;crates
@@ -25,7 +25,7 @@
     
     ;robot
     (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
-    (is_empty ?r - robot)           ;robot ?r is empty
+    ;(is_empty ?r - robot)           ;robot ?r is empty
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
@@ -34,8 +34,13 @@
     ;carrier
     (carrier_at ?k - carrier ?l - location)
     (bearing ?k - carrier ?c - crate)
+)
 
-    )
+;crate count function
+(:functions
+    (crate_count ?c - crate)
+)
+
 
 
 ;moves robot between two locations: ?from and ?to
@@ -50,7 +55,7 @@
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (not (robot_at ?r ?from))(not (carrier_at ?k ?from))
-        (increase (total_cost) 10)
+        ;(increase (total_cost) 10)
         )
 )
 
@@ -64,7 +69,7 @@
     :effect (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (not (carrier_at ?k ?from))(not (robot_at ?r ?from))
-        (increase (total_cost) 20)
+        ;(increase (total_cost) 20)
         )
 )
 
@@ -80,7 +85,7 @@
     :effect (and 
         (bearing ?k ?c)(not (crate_at ?c ?depot))
         (increase (crate_count ?k) 1)   ;increases crate_count by 1 unit
-        (increase (total_cost) 1)
+        ;(increase (total_cost) 5)
     )
 )
 
@@ -91,13 +96,14 @@
     :precondition (and 
         (robot_at ?r ?to)(carrier_at ?k ?to)
         (person_at ?p ?to)(bearing ?k ?c)
-        (> (crate_count ?k) 0)  ;crate number must be non-negative nor nough
+        (not (served ?p ?c))
+        (> (crate_count ?k) 0)  ;crate number must be non-negative nor nough for delivering
         )
     :effect (and 
         (served ?p ?c)(crate_at ?c ?to)
         (not (bearing ?k ?c))(not (is_available ?c))
         (decrease (crate_count ?k) 1)   ;decreases crate_count by 1 unit
-        (increase (total_cost) 1)
+        ;(increase (total_cost) 1)
     )
 )
 

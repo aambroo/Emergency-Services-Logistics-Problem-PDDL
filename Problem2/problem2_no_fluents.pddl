@@ -20,6 +20,15 @@
     (crate_at m2 depot)
     (crate_at m3 depot)
 
+    ;delivery state
+    (not (is_delivered f1))
+    (not (is_delivered f2))
+    (not (is_delivered f3))
+    (not (is_delivered f4))
+    (not (is_delivered m1))
+    (not (is_delivered m2))
+    (not (is_delivered m3))
+
 
     ;robot location
     (robot_at operator depot)
@@ -36,10 +45,6 @@
     (person_at francesco l2)
     (person_at alice l7)
     (person_at giorgio l3)
-
-    ;every person is not served
-    
-    
     
 
     ;add-pop relationships: \ref{elevator problem}

@@ -29,22 +29,22 @@
 
 (:predicates 
     ;crates
-    (crate_at ?c - crate ?l - loc)     ;crate ?c crate_at at location ?l
+    (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
     ;(is_loaded ?c - crate)           ;crate unavailable because loaded 
     (is_delivered ?c - crate)                       ;crate unavailable because delivered
 
     ;robot
-    (robot_at ?r - robot ?l - loc)     ;robot ?r is at location ?l
+    (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
     (is_empty ?r - robot)           ;robot ?r is empty
     
     ;people
-    (person_at ?p - person ?l - loc)       ;person ?p is at location ?l
+    (person_at ?p - person ?l - location)       ;person ?p is at location ?l
     (served ?p - person ?c - crate)              ;person ?p has been served with crate ?c
     ;(needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
     ;(not_needs ?p - person ?cont - content)
 
     ;carrier
-    (carrier_at ?k - carrier ?l - loc)
+    (carrier_at ?k - carrier ?l - location)
     (bearing ?k - carrier ?c - crate)         ;carrier ?k is bearing crate ?c
 
     ;predicates to avoid using fluents
@@ -58,11 +58,11 @@
 ;moves robot between two locations: ?from and ?to
 ;NOTE: crates of no kind are involved
 (:action move
-    :parameters (?r - robot ?k - carrier ?from ?to - loc ?depot - base)
+    :parameters (?r - robot ?k - carrier ?from - location ?to - loc )
     :precondition (and 
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
-        (not(=?from ?depot))           ;this way carrier is forced to pick action back_to_base to reload 
+        (not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
     )
     :effect(and
         (not(robot_at ?r ?from))
@@ -117,6 +117,7 @@
         (robot_at ?r ?to)
         (carrier_at ?k ?to)
         (person_at ?p ?to)
+        (not (is_delivered ?c))
         ;(is_loaded ?c)
         ;(contains ?c ?cont)
         ;(at start (not(is_delivered ?c)))

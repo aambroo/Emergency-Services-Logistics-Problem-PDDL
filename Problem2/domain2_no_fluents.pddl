@@ -28,9 +28,8 @@
 (:predicates 
     ;crates
     (crate_at ?c - crate ?l - location)     ;crate ?c crate_at at location ?l
-    (is_loaded ?c - crate)           ;crate unavailable because loaded 
+    ;(is_loaded ?c - crate)           ;crate unavailable because loaded 
     (is_delivered ?c - crate)                       ;crate unavailable because delivered
-    (contains ?c - crate ?cont - content)       ;added as a result of OPTIC non-compatibility
 
     ;robot
     (robot_at ?r - robot ?l - location)     ;robot ?r is at location ?l
@@ -38,9 +37,9 @@
     
     ;people
     (person_at ?p - person ?l - location)       ;person ?p is at location ?l
-    ;(served ?p - person)              ;person ?p has been served with crate ?c
-    (needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
-    (not_needs ?p - person ?cont - content)
+    (served ?p - person)              ;person ?p has been served with crate ?c
+    ;(needs ?p - person ?cont - content)            ;added as a result of OPTIC non-compatibility
+    ;(not_needs ?p - person ?cont - content)
 
     ;carrier
     (carrier_at ?k - carrier ?l - location)
@@ -94,16 +93,16 @@
         (carrier_at ?k ?depot)
         (crate_at ?c ?depot)
         (add ?init_amount ?final_amount) ;updating initial and final heaps, essential for counting crates
-        
+        (not (bearing ?k ?c))
+        (not (is_delivered ?c))
         (crate_count ?k ?init_amount)    ;this prevents multiple robots to load multiple crates at a time
     
     )
     :effect (and
-        (not(is_empty ?r)) 
-        (not(is_loaded ?c))         ;mainly set constant crate count
+        ;(not(is_loaded ?c))         ;mainly set constant crate count
         (bearing ?k ?c)
         (not (crate_at ?c ?depot))
-        (is_loaded ?c)
+        ;(is_loaded ?c)
         ;(at end (increase (crate_count ?k) 1)) ;cannot use ADLs
         (is_empty ?r)
         (not (crate_count ?k ?init_amount))
@@ -114,34 +113,28 @@
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:action deliver_crate
-    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier ?init_amount ?final_amount - amount ?cont - content)
+    :parameters (?r - robot ?c - crate ?to - location ?p - person ?k - carrier ?init_amount ?final_amount - amount)
     :precondition (and 
         (robot_at ?r ?to)
         (carrier_at ?k ?to)
         (person_at ?p ?to)
-        (needs ?p ?cont)
-        (is_loaded ?c)
-        (contains ?c ?cont)
+        ;(is_loaded ?c)
+        ;(contains ?c ?cont)
         ;(at start (not(is_delivered ?c)))
         (bearing ?k ?c)
         ;(at start (>(crate_count ?k)0))    ;cannot use ADLs
         (pop ?init_amount ?final_amount)
-        (is_empty ?r)
-
         (crate_count ?k ?init_amount)    ;this prevents multiple robots to deliver multiple crates at a time
     )
     :effect (and
-       (not(is_empty ?r))
-       (not (needs ?p ?cont))
-       (not_needs ?p ?cont)
-       (not(is_loaded ?c))
+       ;(not(is_loaded ?c))
        (is_delivered ?c)
+       (served ?p)
        (not(bearing ?k ?c))
        (crate_at ?c ?to)
        ;(at end(decrease (crate_count ?k) 1))   ;cannot use ADLs
        (not (crate_count ?k ?init_amount))
        (crate_count ?k ?final_amount)
-       (is_empty ?r)
 
     )
 )

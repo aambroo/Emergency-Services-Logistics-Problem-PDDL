@@ -66,7 +66,7 @@
     :parameters (?from - loc ?to - base ?r - robot ?k - carrier)
     :precondition (and 
         (carrier_at ?k ?from)(robot_at ?r ?from)
-        (not(=(?from ?to)))
+        (not(= ?from ?to))
         (= (crate_count ?k) 0) ;this forces ?k and ?r to deliver crates first.
         )
     :effect (and 

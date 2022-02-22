@@ -60,9 +60,13 @@
     (pop n2 n1)
     (pop n1 n0)
 
+    ;add initial battery 
+    (battery_level_carrier carrier bat_car10)
+    (battery_level_robot operator bat_rob10)
+
     ;charge_battery and dec_battery
     (charge_battery_carrier bat_car0 bat_car10 carrier)
-    (charge_battery_robot bat_rob bat_rob10 operator)
+    (charge_battery_robot bat_rob0 bat_rob10 operator)
 
     (dec_battery_carrier bat_car10 bat_car8 carrier)
     (dec_battery_carrier bat_car8 bat_car6 carrier)
@@ -75,6 +79,7 @@
     (dec_battery_robot bat_rob6 bat_rob4 operator)
     (dec_battery_robot bat_rob4 bat_rob2 operator)
     (dec_battery_robot bat_rob2 bat_rob0 operator)
+    
     
 )
 

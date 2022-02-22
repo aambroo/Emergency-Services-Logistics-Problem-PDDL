@@ -1,4 +1,5 @@
 (define (problem problem2_battery) (:domain normalDelivery_battery)
+
 (:objects
     l1 l2 l3 l4 l5 l6 l7 - loc
     matteo alice francesco eliana giorgio - person

@@ -12,7 +12,7 @@
     carrier - object
     crate - object
     person - object
-    loc base - location
+    loc base charge - location
     food meds - crate
     amount - object
 )
@@ -24,6 +24,7 @@
     n0 - amount
     bat_car1 bat_rob1 - amount
     bat_car0 bat_rob0 - amount
+    charge - charge
 )
 
 (:predicates 
@@ -69,7 +70,7 @@
 ;moves robot between two locations: ?from and ?to
 ;NOTE: crates of no kind are involved
 (:action move
-    :parameters (?r - robot ?k - carrier ?from - location ?to - loc ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
+    :parameters (?r - robot ?k - carrier ?from - location ?to - location ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
     :precondition (and 
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
@@ -109,7 +110,7 @@
 )
 
 (:action back_charge
-    :parameters (?r - robot ?k - carrier ?charge_loc - base ?from - loc ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
+    :parameters (?r - robot ?k - carrier ?charge_loc - charge ?from - location ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
     :precondition (and 
         (battery_level_carrier ?k bat_car1)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
         (battery_level_robot ?r bat_rob1)
@@ -178,18 +179,20 @@
     )
 )
 (:action charge_battery
-    :parameters (?depot - base ?r - robot ?k - carrier ?init_car ?init_rob ?final_car ?final_rob - amount)
+    :parameters (?charge - charge ?r - robot ?k - carrier ?init_car ?init_rob ?final_car ?final_rob - amount)
     :precondition (and 
-        (carrier_at ?k ?depot)
-        (robot_at ?r ?depot)
-        (battery_level_carrier ?k bat_car1)
-        (battery_level_robot ?r bat_rob1)
+        (carrier_at ?k ?charge)
+        (robot_at ?r ?charge)
+        (battery_level_carrier ?k ?init_car)
+        (battery_level_robot ?r ?init_rob)
         (charge_battery_carrier ?init_car ?final_car ?k)
         (charge_battery_robot ?init_rob ?final_rob ?r)
     )
     :effect (and 
         (carrier_at ?k ?depot)
         (robot_at ?r ?depot)
+        (not(battery_level_carrier ?k ?init_car))
+        (not(battery_level_robot ?r ?init_rob))
         (battery_level_carrier ?k ?final_car)
         (battery_level_robot ?r ?final_rob)
     )   

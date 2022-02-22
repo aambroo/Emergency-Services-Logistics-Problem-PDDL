@@ -75,8 +75,10 @@
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
         (not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
-        ;(not(battery_level_carrier ?k bat_car0))       ;CHECK    -> stessa cosa con or
-        ;(not(battery_level_robot ?r bat_rob0))         ; CHECK
+        (not(battery_level_carrier ?k bat_car0))       ;CHECK    -> stessa cosa con or
+        (not(battery_level_robot ?r bat_rob0))         ; CHECK
+        (battery_level_carrier ?k origin_car)
+        (battery_level_robot ?r origin_rob)
         (dec_battery_carrier ?origin_car ?fine_car ?k)
         (dec_battery_robot ?origin_rob ?fine_rob ?r)
     )
@@ -86,8 +88,8 @@
         (robot_at ?r ?to)
         (carrier_at ?k ?to) 
           
-        ;(not(battery_level_carrier ?k ?origin_car))
-        ;(not(battery_level_robot ?r ?origin_rob))
+        (not(battery_level_carrier ?k ?origin_car))
+        (not(battery_level_robot ?r ?origin_rob))
         (battery_level_carrier ?k ?fine_car) 
         (battery_level_robot ?r ?fine_rob)   
     )

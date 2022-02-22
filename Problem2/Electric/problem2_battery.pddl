@@ -104,7 +104,7 @@
     ;(exists (?c - food) (and (served francesco ?c)))
 
     ;Alice needs meds
-    ;(or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
+    (or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
     ;(exists (?c - meds) (and (served alice ?c)))
 ))
 

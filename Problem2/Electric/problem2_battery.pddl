@@ -1,4 +1,4 @@
-(define (problem problem2_no_fluents) (:domain normalDelivery_no_fluents)
+(define (problem problem2_battery) (:domain normalDelivery_battery)
 (:objects
     l1 l2 l3 l4 l5 l6 l7 - loc
     matteo alice francesco eliana giorgio - person
@@ -8,8 +8,8 @@
 
     ;adding amount objects
     n1 n2 n3 n4 - amount
-    bat_car1 bat_car2 bat_car3 bat_car4 bat_car5 bat_car6 bat_car7 bat_car8 bat_car9 bat_car10 - amount 
-    bat_rob1 bat_rob2 bat_rob3 bat_rob4 bat_rob5 bat_rob6 bat_rob7 bat_rob8 bat_rob9 bat_rob10 - amount
+    bat_car2 bat_car4 bat_car6 bat_car8 bat_car10 - amount 
+    bat_rob2 bat_rob4 bat_rob6 bat_rob8 bat_rob10 - amount
 )
 
 (:init
@@ -64,27 +64,17 @@
     (charge_battery_carrier bat_car0 bat_car10 carrier)
     (charge_battery_robot bat_rob bat_rob10 operator)
 
-    (dec_battery_carrier bat_car10 bat_car9 carrier)
-    (dec_battery_carrier bat_car9 bat_car8 carrier)
-    (dec_battery_carrier bat_car8 bat_car7 carrier)
-    (dec_battery_carrier bat_car7 bat_car6 carrier)
-    (dec_battery_carrier bat_car6 bat_car5 carrier)
-    (dec_battery_carrier bat_car5 bat_car4 carrier)
-    (dec_battery_carrier bat_car4 bat_car3 carrier)
-    (dec_battery_carrier bat_car3 bat_car2 carrier)
-    (dec_battery_carrier bat_car2 bat_car1 carrier)
-    (dec_battery_carrier bat_car1 bat_car0 carrier)
+    (dec_battery_carrier bat_car10 bat_car8 carrier)
+    (dec_battery_carrier bat_car8 bat_car6 carrier)
+    (dec_battery_carrier bat_car6 bat_car4 carrier)
+    (dec_battery_carrier bat_car4 bat_car2 carrier)
+    (dec_battery_carrier bat_car2 bat_car0 carrier)
     
-    (dec_battery_robot bat_rob10 bat_rob9 operator)
-    (dec_battery_robot bat_rob9 bat_rob8 operator)
-    (dec_battery_robot bat_rob8 bat_rob7 operator)
-    (dec_battery_robot bat_rob7 bat_rob6 operator)
-    (dec_battery_robot bat_rob6 bat_rob5 operator)
-    (dec_battery_robot bat_rob5 bat_rob4 operator)
-    (dec_battery_robot bat_rob4 bat_rob3 operator)
-    (dec_battery_robot bat_rob3 bat_rob2 operator)
-    (dec_battery_robot bat_rob2 bat_rob1 operator)
-    (dec_battery_robot bat_rob1 bat_rob0 operator)
+    (dec_battery_robot bat_rob10 bat_rob8 operator)
+    (dec_battery_robot bat_rob8 bat_rob6 operator)
+    (dec_battery_robot bat_rob6 bat_rob4 operator)
+    (dec_battery_robot bat_rob4 bat_rob2 operator)
+    (dec_battery_robot bat_rob2 bat_rob0 operator)
     
 )
 
@@ -97,19 +87,19 @@
 
     
     ;Matteo needs 2 crates of meds
-    (or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
-    (or (served matteo m1)(served matteo m2)(served matteo m3))
+    ;(or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
+    ;(or (served matteo m1)(served matteo m2)(served matteo m3))
     ;(exists (?c - meds) (and (served matteo ?c)))
     
 
     ;Francesco needs both food and meds
-    (or (served francesco m1)(served francesco m2)(served francesco m3))
-    (or(served francesco m1)(served francesco m2)(served francesco m3))
+    ;(or (served francesco m1)(served francesco m2)(served francesco m3))
+    ;(or(served francesco m1)(served francesco m2)(served francesco m3))
     ;(exists (?c - meds) (and (served francesco ?c)))
     ;(exists (?c - food) (and (served francesco ?c)))
 
     ;Alice needs meds
-    (or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
+    ;(or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
     ;(exists (?c - meds) (and (served alice ?c)))
 ))
 

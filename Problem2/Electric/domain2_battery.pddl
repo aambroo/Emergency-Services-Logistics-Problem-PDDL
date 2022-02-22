@@ -1,6 +1,6 @@
 ;Header and description
 
-(define (domain normalDelivery_no_fluents)
+(define (domain normalDelivery_battery)
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
@@ -54,7 +54,7 @@
 
     ;add forklift and carrier with battery
     (charge_battery_carrier ?init_car ?final_car - amount ?k - carrier)
-    (charge_battery_robot ?init_rob ? final_rob - amount ?r - robot)
+    (charge_battery_robot ?init_rob ?final_rob - amount ?r - robot)
 
     (dec_battery_carrier ?orig_car ?fine_car - amount ?k - carrier)
     (dec_battery_robot ?orgin_rob ?fine_rob - amount ?r - robot)
@@ -69,13 +69,13 @@
 ;moves robot between two locations: ?from and ?to
 ;NOTE: crates of no kind are involved
 (:action move
-    :parameters (?r - robot ?k - carrier ?from - location ?to - loc ?origin_car ?fine_car - amount)
+    :parameters (?r - robot ?k - carrier ?from - location ?to - loc ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
     :precondition (and 
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
         (not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
-        (battery_level_carrier ?k ?battery_car10)
-        (battery_level_robot ?r ?battery_rob0)
+        (not(battery_level_carrier ?k bat_car1))       ;CHECK    -> stessa cosa con or
+        (not(battery_level_robot ?r bat_rob1))         ; CHECK
     )
     :effect(and
         (not(robot_at ?r ?from))
@@ -83,22 +83,34 @@
         (robot_at ?r ?to)
         (carrier_at ?k ?to) 
         (dec_battery_carrier ?orig_car ?fine_car ?k)
-           
+        (dec_battery_robot ?orgin_rob ?fine_rob ?r)  
+        (not(battery_level_carrier ?k ?origin_car))
+        (not(battery_level_robot ?r ?origin_rob))
+        (battery_level_carrier ?k ?fine_car) 
+        (battery_level_robot ?r ?fine_rob)   
     )
 )
 ;send robot ?r and carrier ?k back to base (depot)
 (:action back_to_base
-    :parameters (?from - loc ?to - base ?r - robot ?k - carrier)
+    :parameters (?from - loc ?to - base ?r - robot ?k - carrier ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
     :precondition (and 
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
-        (crate_count ?k n0)      ;setting crate amount to initial number (n0) for carrier ?k
+        (crate_count ?k n0)                              ;setting crate amount to initial number (n0) for carrier ?k
+        (battery_level_carrier ?k bat_car0)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
+        (battery_level_robot ?r bat_rob0)
     )
     :effect(and
         (not (robot_at ?r ?from))
         (not (carrier_at ?k ?from))
         (robot_at ?r ?to)
         (carrier_at ?k ?to)
+        (dec_battery_carrier ?orig_car ?fine_car ?k)
+        (dec_battery_robot ?orgin_rob ?fine_rob ?r)
+        (not(battery_level_carrier ?k ?origin_car))
+        (not(battery_level_robot ?r ?orin_rob))
+        (battery_level_carrier ?k ?fine_car)
+        (battery_level_robot ?r ?fine_rob)
     )   
 )
 ;load (generic) crate ?c onto robot ?r at location ?l
@@ -112,7 +124,7 @@
         (not (bearing ?k ?c))
         (not (is_delivered ?c))
         (crate_count ?k ?init_amount)    ;this prevents multiple robots to load multiple crates at a time
-    
+
     )
     :effect (and
         (bearing ?k ?c)
@@ -146,4 +158,23 @@
 
     )
 )
+(:action charge_battery
+    :parameters (?depote - base ?r - robot ?k - carrier ?init_car ?init_rob ?final_car ?final_rob - amount)
+    :precondition (and 
+        (carrier_at ?k ?depot)
+        (robot_at ?r ?depot)
+        (battery_level_carrier ?k bat_car0)
+        (battery_level_robot ?r bat_rob0)
+        (charge_battery_carrier ?init_car ?final_car ?k)
+        (charge_battery_robot ?init_rob ?final_rob ?r)
+    )
+    :effect (and 
+        (carrier_at ?k ?depot)
+        (robot_at ?r ?depot)
+        (battery_level_carrier ?k ?final_battery_car)
+        (battery_level_robot ?r ?final_battery_rob)
+    )   
+)
+
+
 )

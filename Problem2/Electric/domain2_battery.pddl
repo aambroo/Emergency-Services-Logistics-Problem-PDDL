@@ -78,8 +78,8 @@
         (not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
         (not(battery_level_carrier ?k bat_car0))       ;CHECK    -> stessa cosa con or
         (not(battery_level_robot ?r bat_rob0))         ; CHECK
-        (battery_level_carrier ?k origin_car)
-        (battery_level_robot ?r origin_rob)
+        (battery_level_carrier ?k ?origin_car)
+        (battery_level_robot ?r ?origin_rob)
         (dec_battery_carrier ?origin_car ?fine_car ?k)
         (dec_battery_robot ?origin_rob ?fine_rob ?r)
     )
@@ -116,8 +116,9 @@
 (:action back_charge
     :parameters (?r - robot ?k - carrier ?charge_loc - charge ?from - location ?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
     :precondition (and 
-        (battery_level_carrier ?k bat_car1)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
-        (battery_level_robot ?r bat_rob1)
+        (or (battery_level_carrier ?k bat_car0)(battery_level_robot ?r bat_rob0))
+        ;(battery_level_carrier ?k bat_car1)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
+        ;(battery_level_robot ?r bat_rob1)
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
         (dec_battery_carrier ?origin_car ?fine_car ?k)

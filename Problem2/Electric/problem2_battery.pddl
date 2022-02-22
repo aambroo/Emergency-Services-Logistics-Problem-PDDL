@@ -62,34 +62,34 @@
     (pop n1 n0)
 
     ;add initial battery 
-    ;(battery_level_carrier carrier bat_car10)
-    ;(battery_level_robot operator bat_rob10)
+    (battery_level_carrier carrier bat_car10)
+    (battery_level_robot operator bat_rob10)
 
     ;charge_battery and dec_battery
-    ;(charge_battery_carrier bat_car0 bat_car10 carrier)
-    ;(charge_battery_robot bat_rob0 bat_rob10 operator)
+    (charge_battery_carrier bat_car0 bat_car10 carrier)
+    (charge_battery_robot bat_rob0 bat_rob10 operator)
 
-    ;(dec_battery_carrier bat_car10 bat_car8 carrier)
-    ;(dec_battery_carrier bat_car8 bat_car6 carrier)
-    ;(dec_battery_carrier bat_car6 bat_car4 carrier)
-    ;(dec_battery_carrier bat_car4 bat_car2 carrier)
-    ;(dec_battery_carrier bat_car2 bat_car0 carrier)
+    (dec_battery_carrier bat_car10 bat_car8 carrier)
+    (dec_battery_carrier bat_car8 bat_car6 carrier)
+    (dec_battery_carrier bat_car6 bat_car4 carrier)
+    (dec_battery_carrier bat_car4 bat_car2 carrier)
+    (dec_battery_carrier bat_car2 bat_car0 carrier)
     
-    ;(dec_battery_robot bat_rob10 bat_rob8 operator)
-    ;(dec_battery_robot bat_rob8 bat_rob6 operator)
-    ;(dec_battery_robot bat_rob6 bat_rob4 operator)
-    ;(dec_battery_robot bat_rob4 bat_rob2 operator)
-    ;(dec_battery_robot bat_rob2 bat_rob0 operator)
+    (dec_battery_robot bat_rob10 bat_rob8 operator)
+    (dec_battery_robot bat_rob8 bat_rob6 operator)
+    (dec_battery_robot bat_rob6 bat_rob4 operator)
+    (dec_battery_robot bat_rob4 bat_rob2 operator)
+    (dec_battery_robot bat_rob2 bat_rob0 operator)
 
     ;TEST-ONLY
-    (battery_level_carrier carrier bat_car2)
-    (battery_level_robot operator bat_rob2)
+    ;(battery_level_carrier carrier bat_car2)
+    ;(battery_level_robot operator bat_rob2)
 
-    (charge_battery_carrier bat_car0 bat_car2 carrier)
-    (charge_battery_robot bat_rob0 bat_rob2 operator)
+    ;(charge_battery_carrier bat_car0 bat_car2 carrier)
+    ;(charge_battery_robot bat_rob0 bat_rob2 operator)
 
-    (dec_battery_carrier bat_car2 bat_car0 carrier)
-    (dec_battery_robot bat_rob2 bat_rob0 operator)
+    ;(dec_battery_carrier bat_car2 bat_car0 carrier)
+    ;(dec_battery_robot bat_rob2 bat_rob0 operator)
 
     
     
@@ -104,8 +104,8 @@
 
     
     ;Matteo needs 2 crates of meds
-    ;(or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
-    ;(or (served matteo m1)(served matteo m2)(served matteo m3))
+    (or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
+    (or (served matteo m1)(served matteo m2)(served matteo m3))
     ;(exists (?c - meds) (and (served matteo ?c)))
     
 

@@ -94,7 +94,7 @@
         (robot_at ?r ?depot)
         (carrier_at ?k ?depot)
         (crate_at ?c ?depot)
-        (add ?init_amount ?final_amount) ;updating initial and final heaps, essential for counting crates
+        ;(add ?init_amount ?final_amount) ;updating initial and final heaps, essential for counting crates
         (not (bearing ?k ?c))
         (not (is_delivered ?c))
         (crate_count ?k ?init_amount)    ;this prevents multiple robots to load multiple crates at a time
@@ -105,6 +105,7 @@
         (not (crate_at ?c ?depot))
         (is_empty ?r)
         (not (crate_count ?k ?init_amount))
+        (add ?init_amount ?final_amount)
         (crate_count ?k ?final_amount)
              
     )

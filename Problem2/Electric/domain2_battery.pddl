@@ -116,9 +116,9 @@
 (:action back_to_charge
     :parameters (?r - robot ?k - carrier ?charge_loc - charge ?from - location) ;?origin_car ?fine_car ?origin_rob ?fine_rob - amount)
     :precondition (and 
-        ;(or (battery_level_carrier ?k bat_car0)(battery_level_robot ?r bat_rob0))
-        (battery_level_carrier ?k bat_car0)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
-        (battery_level_robot ?r bat_rob0)
+        (or (battery_level_carrier ?k bat_car0)(battery_level_robot ?r bat_rob0))
+        ;(battery_level_carrier ?k bat_car0)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
+        ;(battery_level_robot ?r bat_rob0)
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
         ;(dec_battery_carrier ?origin_car ?fine_car ?k)
@@ -140,7 +140,7 @@
 
 ;load (generic) crate ?c onto robot ?r at location ?l
 (:action load_crate
-    :parameters (?depot - base ?c - crate ?r - robot ?k - carrier ?init_amount ?final_amount - amount)
+    :parameters (?depot - base ?c - crate ?r - robot ?k - carrier ?init_amount ?final_amount - amount ?origin_rob ?fine_rob - amount)
     :precondition (and
         (robot_at ?r ?depot)
         (carrier_at ?k ?depot)
@@ -149,6 +149,11 @@
         (not (bearing ?k ?c))
         (not (is_delivered ?c))
         (crate_count ?k ?init_amount)    ;this prevents multiple robots to load multiple crates at a time
+        
+        (not (battery_level_carrier ?k bat_car0))   ;check
+        (not (battery_level_robot ?r bat_rob0))     ;check
+        (battery_level_robot ?r ?origin_rob)
+        (dec_battery_robot ?origin_rob ?fine_rob ?r)
 
     )
     :effect (and
@@ -157,13 +162,16 @@
         (is_empty ?r)
         (not (crate_count ?k ?init_amount))
         (crate_count ?k ?final_amount)
+        
+        ;(not (battery_level_robot ?r ?origin_rob))
+        (battery_level_robot ?r ?fine_rob)
              
     )
 )
 
 ;;deliver (generic) crate ?c to location ?l to person ?p
 (:action deliver_crate
-    :parameters (?r - robot ?c - crate ?to - loc ?p - person ?k - carrier ?init_amount ?final_amount - amount)
+    :parameters (?r - robot ?c - crate ?to - loc ?p - person ?k - carrier ?init_amount ?final_amount - amount ?origin_rob ?fine_rob - amount)
     :precondition (and 
         (robot_at ?r ?to)
         (carrier_at ?k ?to)
@@ -172,6 +180,10 @@
         (bearing ?k ?c)
         (pop ?init_amount ?final_amount)
         (crate_count ?k ?init_amount)    ;this prevents multiple robots to deliver multiple crates at a time
+        
+        (not (battery_level_robot ?r bat_rob0))
+        (battery_level_robot ?r ?origin_rob)
+        (dec_battery_robot ?origin_rob ?fine_rob ?r)
     )
     :effect (and
        (is_delivered ?c)
@@ -180,6 +192,9 @@
        (crate_at ?c ?to)
        (not (crate_count ?k ?init_amount))
        (crate_count ?k ?final_amount)
+
+       ;(not (battery_level_robot ?r ?origin_rob))
+       (battery_level_robot ?r ?fine_rob)
 
     )
 )

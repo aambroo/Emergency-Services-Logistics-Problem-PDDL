@@ -74,8 +74,8 @@
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
         (not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
-        (not(battery_level_carrier ?k bat_car1))       ;CHECK    -> stessa cosa con or
-        (not(battery_level_robot ?r bat_rob1))         ; CHECK
+        (not(battery_level_carrier ?k bat_car0))       ;CHECK    -> stessa cosa con or
+        (not(battery_level_robot ?r bat_rob0))         ; CHECK
     )
     :effect(and
         (not(robot_at ?r ?from))

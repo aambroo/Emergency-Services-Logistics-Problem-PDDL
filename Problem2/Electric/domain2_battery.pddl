@@ -15,16 +15,17 @@
     person - object
     loc base charge - location
     food meds - crate
-    amount - object
+    crate_amount bat_amount - counter
+    counter - object
 )
 
 ; un-comment following line if constants are needed
 (:constants
     operator - robot
     depot - base
-    n0 - amount
-    bat_car1 bat_rob1 - amount
-    bat_car0 bat_rob0 - amount
+    n0 - crate_amount
+    bat_car1 bat_rob1 - bat_amount
+    bat_car0 bat_rob0 - bat_amount
     charge - charge
 )
 
@@ -76,9 +77,9 @@
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
         (not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
-        
         (not(battery_level_carrier ?k bat_car0))            ;checking battey is NOT 0%
         (not(battery_level_robot ?r bat_rob0))              ;checking battey is NOT 0%
+        
         (dec_battery_carrier ?origin_car ?final_car ?k)
         (battery_level_carrier ?k ?origin_car)
         (dec_battery_robot ?origin_rob ?final_rob ?r)
@@ -86,8 +87,8 @@
     )
     :effect(and
         (not(robot_at ?r ?from))
-        (not(carrier_at ?k ?from))
         (robot_at ?r ?to)
+        (not(carrier_at ?k ?from))
         (carrier_at ?k ?to) 
           
         (not(battery_level_carrier ?k ?origin_car))
@@ -115,15 +116,16 @@
 )
 
 (:action back_to_charge
-    :parameters (?r - robot ?k - carrier ?charge_loc - charge ?from - location ?origin_car ?final_car ?origin_rob ?final_rob - amount)
+    :parameters (?r - robot ?k - carrier ?charge_loc - charge ?from - location) ;?origin_car ?final_car ?origin_rob ?final_rob - amount)
     :precondition (and 
         (or (battery_level_carrier ?k bat_car0)(battery_level_robot ?r bat_rob0))
         ;(battery_level_carrier ?k bat_car0)             ; check : meglio mettere or? perchè può essere che robot sia scarico ma il carrier no !!!!!!!!!!!!!!
         ;(battery_level_robot ?r bat_rob0)
         (robot_at ?r ?from)
         (carrier_at ?k ?from)
-        (dec_battery_carrier ?origin_car ?final_car ?k)
-        (dec_battery_robot ?origin_rob ?final_rob ?r)
+        ;DONT TOUCH
+        ;(dec_battery_carrier ?origin_car ?final_car ?k)
+        ;(dec_battery_robot ?origin_rob ?final_rob ?r)
     )
 
     :effect (and
@@ -131,11 +133,11 @@
         (not(carrier_at ?k ?from))
         (robot_at ?r ?charge_loc)
         (carrier_at ?k ?charge_loc)
-        
-        (not(battery_level_carrier ?k ?origin_car))
-        (not(battery_level_robot ?r ?origin_rob))
-        (battery_level_carrier ?k ?final_car)
-        (battery_level_robot ?r ?final_rob) 
+        ;DONT TOUCH
+        ;(not(battery_level_carrier ?k ?origin_car))
+        ;(not(battery_level_robot ?r ?origin_rob))
+        ;(battery_level_carrier ?k ?final_car)
+        ;(battery_level_robot ?r ?final_rob) 
     )
 )
 
@@ -146,13 +148,14 @@
         (robot_at ?r ?depot)
         (carrier_at ?k ?depot)
         (crate_at ?c ?depot)
-        (add ?init_amount ?final_amount)                ;updating initial and final heaps, essential for counting crates
         (not (bearing ?k ?c))
         (not (is_delivered ?c))
-        (crate_count ?k ?init_amount)                   ;this prevents multiple robots to load multiple crates at a time
-        
         (not (battery_level_carrier ?k bat_car0))       ;checking battey is NOT 0%
         (not (battery_level_robot ?r bat_rob0))         ;checking battey is NOT 0%
+        ;tracking crates
+        (add ?init_amount ?final_amount)                ;updating initial and final heaps, essential for counting crates
+        (crate_count ?k ?init_amount)                   ;this prevents multiple robots to load multiple crates at a time
+        ;tracking battery life
         (dec_battery_robot ?origin_rob ?final_rob ?r)   ;updates battery discharge for load task
         (battery_level_robot ?r ?origin_rob)
 
@@ -161,6 +164,7 @@
         (bearing ?k ?c)
         (not (crate_at ?c ?depot))
         (is_empty ?r)
+        
         (not (crate_count ?k ?init_amount))
         (crate_count ?k ?final_amount)
         

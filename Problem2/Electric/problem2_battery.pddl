@@ -8,9 +8,9 @@
     carrier - carrier
 
     ;adding amount objects
-    n1 n2 n3 n4 - amount
-    bat_car2 bat_car4 bat_car6 bat_car8 bat_car10 - amount 
-    bat_rob2 bat_rob4 bat_rob6 bat_rob8 bat_rob10 - amount
+    n1 n2 n3 n4 - crate_amount
+    bat_car1 bat_car2 bat_car3 bat_car4 bat_car5 bat_car6 bat_car7 bat_car8 bat_car9 bat_car10 - bat_amount
+    bat_rob1 bat_rob2 bat_rob3 bat_rob4 bat_rob5 bat_rob6 bat_rob7 bat_rob8 bat_rob9 bat_rob10 - bat_amount
 )
 
 (:init
@@ -69,17 +69,22 @@
     ;(charge_battery_carrier bat_car0 bat_car10 carrier)
     ;(charge_battery_robot bat_rob0 bat_rob10 operator)
 
-    ;(dec_battery_carrier bat_car10 bat_car8 carrier)
-    ;(dec_battery_carrier bat_car8 bat_car6 carrier)
-    ;(dec_battery_carrier bat_car6 bat_car4 carrier)
-    ;(dec_battery_carrier bat_car4 bat_car2 carrier)
-    ;(dec_battery_carrier bat_car2 bat_car0 carrier)
+    (dec_battery_carrier bat_car10 bat_car8 carrier)
+    (dec_battery_carrier bat_car8 bat_car6 carrier)
+    (dec_battery_carrier bat_car6 bat_car4 carrier)
+    (dec_battery_carrier bat_car4 bat_car2 carrier)
+    (dec_battery_carrier bat_car2 bat_car0 carrier)
     
-    ;(dec_battery_robot bat_rob10 bat_rob8 operator)
-    ;(dec_battery_robot bat_rob8 bat_rob6 operator)
-    ;(dec_battery_robot bat_rob6 bat_rob4 operator)
-    ;(dec_battery_robot bat_rob4 bat_rob2 operator)
-    ;(dec_battery_robot bat_rob2 bat_rob0 operator)
+    (dec_battery_robot bat_rob10 bat_rob9 operator)
+    (dec_battery_robot bat_rob9 bat_rob8 operator)
+    (dec_battery_robot bat_rob8 bat_rob7 operator)
+    (dec_battery_robot bat_rob7 bat_rob6 operator)
+    (dec_battery_robot bat_rob6 bat_rob5 operator)
+    (dec_battery_robot bat_rob5 bat_rob4 operator)
+    (dec_battery_robot bat_rob4 bat_rob3 operator)
+    (dec_battery_robot bat_rob3 bat_rob2 operator)
+    (dec_battery_robot bat_rob2 bat_rob1 operator)
+    (dec_battery_robot bat_rob1 bat_rob0 operator)
 
     ;TEST-ONLY
     (battery_level_carrier carrier bat_car6)
@@ -88,12 +93,12 @@
     (charge_battery_carrier bat_car0 bat_car6 carrier)
     (charge_battery_robot bat_rob0 bat_rob6 operator)
 
-    (dec_battery_robot bat_rob6 bat_rob4 operator)
-    (dec_battery_robot bat_rob4 bat_rob2 operator)
-    (dec_battery_robot bat_rob2 bat_rob0 operator)
-    (dec_battery_carrier bat_car6 bat_car4 carrier)
-    (dec_battery_carrier bat_car4 bat_car2 carrier)
-    (dec_battery_carrier bat_car2 bat_car0 carrier)
+    ;(dec_battery_robot bat_rob6 bat_rob4 operator)
+    ;(dec_battery_robot bat_rob4 bat_rob2 operator)
+    ;(dec_battery_robot bat_rob2 bat_rob0 operator)
+    ;(dec_battery_carrier bat_car6 bat_car4 carrier)
+    ;(dec_battery_carrier bat_car4 bat_car2 carrier)
+    ;(dec_battery_carrier bat_car2 bat_car0 carrier)
     
     
 )
@@ -113,8 +118,8 @@
     
 
     ;Francesco needs both food and meds
-    ;(or (served francesco m1)(served francesco m2)(served francesco m3))
-    ;(or(served francesco m1)(served francesco m2)(served francesco m3))
+    (or (served francesco m1)(served francesco m2)(served francesco m3))
+    (or (served francesco m1)(served francesco m2)(served francesco m3))
     ;(exists (?c - meds) (and (served francesco ?c)))
     ;(exists (?c - food) (and (served francesco ?c)))
 

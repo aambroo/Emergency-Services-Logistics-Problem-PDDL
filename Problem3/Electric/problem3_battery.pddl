@@ -1,10 +1,10 @@
 (define (problem problem2_battery) (:domain normalDelivery_battery)
 
 (:objects
-    l1 l2 l3 l4 l5 l6 l7 - loc
+    l1 l2 l3 l4 l5 l6 l7 - location
+    c1 c2 c3 c4 c5 c6 c7 - crate
     matteo alice francesco eliana giorgio - person
-    f1 f2 f3 f4 - food
-    m1 m2 m3 - meds
+    meds food - content
     carrier - carrier
 
     ;adding amount objects
@@ -15,22 +15,39 @@
 
 (:init
     ;crates location
-    (crate_at f1 depot)
-    (crate_at f2 depot)
-    (crate_at f3 depot)
-    (crate_at f4 depot)
-    (crate_at m1 depot)
-    (crate_at m2 depot)
-    (crate_at m3 depot)
+    (crate_at c1 depot)
+    (crate_at c2 depot)
+    (crate_at c3 depot)
+    (crate_at c4 depot)
+    (crate_at c5 depot)
+    (crate_at c6 depot)
+    (crate_at c7 depot)
 
-    ;delivery state
-    (not (is_delivered f1))
-    (not (is_delivered f2))
-    (not (is_delivered f3))
-    (not (is_delivered f4))
-    (not (is_delivered m1))
-    (not (is_delivered m2))
-    (not (is_delivered m3))
+    ;crate availability
+    (not(is_loaded c1))
+    (not(is_loaded c2))
+    (not(is_loaded c3))
+    (not(is_loaded c4))
+    (not(is_loaded c5))
+    (not(is_loaded c6))
+    (not(is_loaded c7)) 
+
+    (not(is_delivered c1))
+    (not(is_delivered c2))
+    (not(is_delivered c3))
+    (not(is_delivered c4))
+    (not(is_delivered c5))
+    (not(is_delivered c6)) 
+    (not(is_delivered c7)) 
+
+    ;crate content
+    (contains c1 meds)
+    (contains c2 meds)
+    (contains c3 meds)
+    (contains c4 food)
+    (contains c5 food)
+    (contains c6 meds)
+    (contains c7 food)
 
 
     ;robot location

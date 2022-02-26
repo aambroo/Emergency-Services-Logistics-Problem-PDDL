@@ -7,7 +7,7 @@
     carrier - carrier
 
     ;adding amount objects
-    n1 n2 n3 n4 n5 n6 n7 - amount
+    n1 n2 n3 n4 - amount
 )
 
 (:init
@@ -69,12 +69,7 @@
     (add n1 n2)
     (add n2 n3)
     (add n3 n4)
-    (add n4 n5)
-    (add n5 n6)
-    (add n6 n7)
-    (pop n7 n6)
-    (pop n6 n5)
-    (pop n5 n4)
+
     (pop n4 n3)
     (pop n3 n2)
     (pop n2 n1)
@@ -97,8 +92,9 @@
     ;(or
     ;    (served eliana f1)(served eliana f2)(served eliana f3)
     ;)
-    (served eliana)
-    (not (needs eliana food))
+    ;(served eliana)
+    ;(not (needs eliana food))
+    (not_needs eliana food)
 
     
     ;Matteo needs 2 crates of meds
@@ -108,8 +104,10 @@
     ;(or
     ;    (served matteo m1)(served matteo m2)(served matteo m3)
     ;)
-    (served matteo)
-    (not (needs matteo meds))(not (needs matteo meds))
+    ;(served matteo)
+    ;(not (needs matteo meds))(not (needs matteo meds))
+    ;(not_needs matteo food)
+    ;(not_needs matteo meds)
 
     ;Francesco needs both food and meds
     ;(or
@@ -118,16 +116,18 @@
     ;(or
     ;    (served francesco m1)(served francesco m2)(served francesco m3)
     ;)
-    (served francesco)
-    (not (needs francesco food))(not (needs francesco meds))
+    ;(served francesco)
+    ;(not (needs francesco food))(not (needs francesco meds))
+    (not_needs francesco food)(not_needs francesco food)
 
 
     ;Alice needs meds
     ;(or
     ;    (served alice f1)(served alice f2)(served alice f3)
     ;)
-    (served alice)
-    (not (needs alice meds))
+    ;(served alice)
+    ;(not (needs alice meds))
+    (not_needs alice meds)
 ))
 
 )

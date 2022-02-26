@@ -1,11 +1,11 @@
 ;Header and description
 
-(define (domain normalDelivery_battery)
+(define (domain durativeDelivery_battery)
 
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :typing :equality :negative-preconditions :disjunctive-preconditions :durative-actions)
+(:requirements :strips :typing :equality :negative-preconditions :disjunctive-preconditions :durative-actions)
 
 (:types 
     robot - object
@@ -80,6 +80,7 @@
         (at start (robot_at ?r ?from))
         (at start (carrier_at ?k ?from))
         ;(not(=?from ?to))           ;this way carrier is forced to pick action back_to_base to reload 
+        (over all (is_empty ?r))
         (at start (not(battery_level_carrier ?k bat_car0)))            ;checking battey is NOT 0%
         (at start (not(battery_level_robot ?r bat_rob0)))              ;checking battey is NOT 0%
         
@@ -87,7 +88,7 @@
         (over all (battery_level_carrier ?k ?origin_car))
         (at start (dec_battery_robot ?origin_rob ?final_rob ?r))
         (over all (battery_level_robot ?r ?origin_rob))                 ;NOT SURE ABOUT THIS
-        (over all (is_empty ?r))
+        
     )
     :effect(and
         (at end (not(robot_at ?r ?from)))
@@ -108,8 +109,9 @@
     :condition (and 
         (at start (robot_at ?r ?from))
         (at start (carrier_at ?k ?from))
-        (at start (crate_count ?k n0))            ;carrier cannot take cut-off unless empty
         (over all (is_empty ?r))
+        (at start (crate_count ?k n0))            ;carrier cannot take cut-off unless empty
+        
         
     )
     :effect(and
@@ -156,8 +158,8 @@
         (at start (robot_at ?r ?depot))
         (at start (carrier_at ?k ?depot))
         (at start (crate_at ?c ?depot))
-        (at start (not (bearing ?k ?c)))
-        (at start (not (is_delivered ?c)))
+        ;(at start (not (bearing ?k ?c)))
+        ;(at start (not (is_delivered ?c)))
         (at start (not (battery_level_carrier ?k bat_car0)))       ;checking battey is NOT 0%
         (at start (not (battery_level_robot ?r bat_rob0)))         ;checking battey is NOT 0%
         
@@ -196,6 +198,9 @@
         (at start (robot_at ?r ?to))
         (at start (carrier_at ?k ?to))
         (at start (person_at ?p ?to))
+        (at start(needs ?p ?cont))
+        (at start (is_loaded ?c))
+        (at start (contains ?c ?cont))
         ;((not (is_delivered ?c))
         (at start (bearing ?k ?c))
         (at start (pop ?init_amount ?final_amount))

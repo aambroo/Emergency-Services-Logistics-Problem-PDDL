@@ -5,7 +5,7 @@
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :strips :typing :equality :negative-preconditions :disjunctive-preconditions :durative-actions)
+(:requirements :strips :typing :equality :negative-preconditions :durative-actions)
 
 (:types 
     robot - object
@@ -85,15 +85,15 @@
         (at start (not(battery_level_robot ?r bat_rob0)))              ;checking battey is NOT 0%
         
         (at start (dec_battery_carrier ?origin_car ?final_car ?k))
-        (over all (battery_level_carrier ?k ?origin_car))
+        (at start (battery_level_carrier ?k ?origin_car))
         (at start (dec_battery_robot ?origin_rob ?final_rob ?r))
-        (over all (battery_level_robot ?r ?origin_rob))                 ;NOT SURE ABOUT THIS
+        (at start (battery_level_robot ?r ?origin_rob))                 ;NOT SURE ABOUT THIS
         
     )
     :effect(and
-        (at end (not(robot_at ?r ?from)))
+        (at start (not(robot_at ?r ?from)))
         (at end (robot_at ?r ?to))
-        (at end (not(carrier_at ?k ?from)))
+        (at start (not(carrier_at ?k ?from)))
         (at end (carrier_at ?k ?to))
           
         (at end (not(battery_level_carrier ?k ?origin_car)))
@@ -127,8 +127,8 @@
     :parameters (?r - robot ?k - carrier ?from - location) ;?origin_car ?final_car ?origin_rob ?final_rob - amount)
     :duration (= ?duration 1)
     :condition (and 
-        (at start (or (battery_level_carrier ?k bat_car0)(battery_level_robot ?r bat_rob0)))
-        ;(battery_level_carrier ?k bat_car0)
+        ;(at start (or (battery_level_carrier ?k bat_car0)(battery_level_robot ?r bat_rob0)))
+        (at start (battery_level_carrier ?k bat_car0))
         ;(battery_level_robot ?r bat_rob0)
         (at start (robot_at ?r ?from))
         (at start (carrier_at ?k ?from))
@@ -160,7 +160,7 @@
         (at start (crate_at ?c ?depot))
         ;(at start (not (bearing ?k ?c)))
         ;(at start (not (is_delivered ?c)))
-        (at start (not (battery_level_carrier ?k bat_car0)))       ;checking battey is NOT 0%
+        ;(at start (not (battery_level_carrier ?k bat_car0)))       ;checking battey is NOT 0%
         (at start (not (battery_level_robot ?r bat_rob0)))         ;checking battey is NOT 0%
         
         ;tracking crate count
@@ -170,7 +170,7 @@
         
         ;tracking battery life
         (at start (dec_battery_robot ?origin_rob ?final_rob ?r))   ;updates battery discharge for load task
-        (over all (battery_level_robot ?r ?origin_rob))            ;NOT SURE ABOUT THIS
+        (at start (battery_level_robot ?r ?origin_rob))            ;NOT SURE ABOUT THIS
 
     )
     :effect (and
@@ -198,7 +198,7 @@
         (at start (robot_at ?r ?to))
         (at start (carrier_at ?k ?to))
         (at start (person_at ?p ?to))
-        (at start(needs ?p ?cont))
+        (at start (needs ?p ?cont))
         (at start (is_loaded ?c))
         (at start (contains ?c ?cont))
         ;((not (is_delivered ?c))
@@ -212,7 +212,8 @@
     )
     :effect (and
        (at start (not(is_empty ?r)))
-       (at end (not (needs ?p ?cont)))
+       (at start (not (needs ?p ?cont)))
+       (at end (not_needs ?p ?cont))
        (at end (not(is_loaded ?c)))
        (at end (is_delivered ?c))
        (at end (not(bearing ?k ?c)))

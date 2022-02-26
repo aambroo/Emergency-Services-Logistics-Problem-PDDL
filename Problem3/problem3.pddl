@@ -106,7 +106,7 @@
     ;)
     ;(served matteo)
     ;(not (needs matteo meds))(not (needs matteo meds))
-    ;(not_needs matteo food)
+    (not_needs matteo food)
     ;(not_needs matteo meds)
 
     ;Francesco needs both food and meds

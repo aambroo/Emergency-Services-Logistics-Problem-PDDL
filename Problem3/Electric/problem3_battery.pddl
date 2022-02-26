@@ -1,4 +1,4 @@
-(define (problem problem2_battery) (:domain durativeDelivery_battery)
+(define (problem problem3_battery) (:domain durativeDelivery_battery)
 
 (:objects
     l1 l2 l3 l4 l5 l6 l7 - location

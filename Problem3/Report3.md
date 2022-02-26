@@ -1,5 +1,5 @@
 # Problem3
-- Initially, we kept the domain as was formulated in Problem2. Turns out that neither LAMA, nor OPTIC support ADL operands/fluents.
+- ~~Initially, we kept the domain as was formulated in Problem2. Turns out that neither LAMA, nor OPTIC support ADL operands/fluents.~~
 - As a result, we were forced to shift to an ADL-less and :typing-less domain.
 
 ## Changes:

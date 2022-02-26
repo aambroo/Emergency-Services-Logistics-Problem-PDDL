@@ -62,16 +62,16 @@
     :duration (= ?duration 10)
     :condition (and 
         (at start (robot_at ?r ?from))
-        (at start(carrier_at ?k ?from))
+        (at start (carrier_at ?k ?from))
         ;(at start (not(=?from ?to)))           ;cannot use ADLs
         ;(at start (>(crate_count ?k)0))        ;cannot use ADLs
         (over all (is_empty ?r))                ;the robot cannot deliver while moving to a location 
     )
     :effect(and
         (at start (not(robot_at ?r ?from)))
-        (at start(not(carrier_at ?k ?from)))
-        (at end(robot_at ?r ?to))
-        (at end(carrier_at ?k ?to))    
+        (at start (not(carrier_at ?k ?from)))
+        (at end (robot_at ?r ?to))
+        (at end (carrier_at ?k ?to))    
     )
 )
 ;send robot ?r and carrier ?k back to base (depot)
@@ -79,7 +79,7 @@
     :parameters (?from - location ?depot - base ?r - robot ?k - carrier)
     :duration (= ?duration 10)
     :condition (and 
-        (at start(robot_at ?r ?from))
+        (at start (robot_at ?r ?from))
         (at start (carrier_at ?k ?from))
         ;(at start (=(crate_count ?k)0)) ;cannot use ADLs
         (over all (is_empty ?r))        ;the robot cannot deliver while going back to base
@@ -151,7 +151,7 @@
        (at end (is_delivered ?c))
        (at end (not(bearing ?k ?c)))
        (at end (crate_at ?c ?to))
-       ;(at end(decrease (crate_count ?k) 1))   ;cannot use ADLs
+       ;(at end (decrease (crate_count ?k) 1))   ;cannot use ADLs
        (at end (not (crate_count ?k ?init_amount)))
        (at end (crate_count ?k ?final_amount))
        (at end (is_empty ?r))

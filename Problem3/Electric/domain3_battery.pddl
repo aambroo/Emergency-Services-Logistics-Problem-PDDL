@@ -5,7 +5,7 @@
 
 ;remove requirements that are not needed
 ;(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality ::disjunctive-preconditions)
-(:requirements :typing :equality :negative-preconditions :disjunctive-preconditions)
+(:requirements :typing :equality :negative-preconditions :disjunctive-preconditions :durative-actions)
 
 (:types 
     robot - object

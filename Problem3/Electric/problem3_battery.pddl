@@ -123,26 +123,29 @@
 (:goal (and
     
     ;Eliana needs food
-    (or (served eliana f1)(served eliana f2)(served eliana f3)(served eliana f4))
+    ;(or (served eliana f1)(served eliana f2)(served eliana f3)(served eliana f4))
     ;(exists (?c - food) (and (served eliana ?c)))
+    (not_needs eliana food)
 
 
     
     ;Matteo needs 2 crates of meds
-    (or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
-    (or (served matteo m1)(served matteo m2)(served matteo m3))
+    ;(or (served matteo f1)(served matteo f2)(served matteo f3)(served matteo f4))
+    ;(or (served matteo m1)(served matteo m2)(served matteo m3))
     ;(exists (?c - meds) (and (served matteo ?c)))
     
 
     ;Francesco needs both food and meds
-    (or (served francesco m1)(served francesco m2)(served francesco m3))
-    (or (served francesco m1)(served francesco m2)(served francesco m3))
+    ;(or (served francesco m1)(served francesco m2)(served francesco m3))
+    ;(or (served francesco m1)(served francesco m2)(served francesco m3))
     ;(exists (?c - meds) (and (served francesco ?c)))
     ;(exists (?c - food) (and (served francesco ?c)))
+    (not_needs francesco food)(not_needs francesco food)
 
     ;Alice needs meds
-    (or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
+    ;(or (served alice f1)(served alice f2)(served alice f3)(served alice f4))
     ;(exists (?c - meds) (and (served alice ?c)))
+    (not_needs alice meds)
 ))
 
 )
